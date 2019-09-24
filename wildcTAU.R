@@ -18,7 +18,7 @@ sleepstudy
 time = sleepstudy$Days
 participant = sleepstudy$Subject
 
-# 3) Estimation with varComprob() (see corresponding helpfile for more details)
+# 3) Estimation with varComprob() (data must be sorted by cluster, see corresponding helpfile for more details)
 
 # Build the argument "groups" of the varComprob() function
 n = length(unique(participant)) # the number of participants
@@ -39,7 +39,16 @@ names(K) = c("sigma2_Intercept", "sigma2_Time", "Covariance")
 model.formula = Reaction ~ 1 + Days
 model.cTAU = varComprob(model.formula, groups = groups,data = sleepstudy, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf))) # Estimation with the composite TAU-estimator
 
-# 4) Percentile Confidence Intervals wih the wild bootstrap
+# 4) Wald-z 95% Confidence Intervals
+summ = summary(model.cTAU)
+Wald_CI.cTAU = matrix(c(model.cTAU$beta[1] - summ$zTable[1,2]*qnorm(.975), model.cTAU$beta[1] + summ$zTable[1,2]*qnorm(.975),
+                        model.cTAU$beta[2] - summ$zTable[2,2]*qnorm(.975), model.cTAU$beta[2] + summ$zTable[2,2]*qnorm(.975),
+                        model.cTAU$eta[1] - sqrt(diag(model.cTAU$vcov.eta))[1]*qnorm(.975), model.cTAU$eta[1] + sqrt(diag(model.cTAU$vcov.eta))[1]*qnorm(.975),
+                        model.cTAU$eta[2] - sqrt(diag(model.cTAU$vcov.eta))[2]*qnorm(.975), model.cTAU$eta[2] + sqrt(diag(model.cTAU$vcov.eta))[2]*qnorm(.975),
+                        model.cTAU$eta[3] - sqrt(diag(model.cTAU$vcov.eta))[3]*qnorm(.975), model.cTAU$eta[3] + sqrt(diag(model.cTAU$vcov.eta))[3]*qnorm(.975)), 5, 2,
+                        dimnames = list(c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"), c("lower bound", "upper bound")))
+
+# 5) Percentile Confidence Intervals wih the wild bootstrap
 wild_cTAU(model = model.cTAU, id = participant, Time = time, B = 999, level = .95)
 
 # ARGUMENTS

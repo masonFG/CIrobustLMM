@@ -18,7 +18,7 @@ sleepstudy
 time = sleepstudy$Days
 participant = sleepstudy$Subject
 
-# 3) Estimation with varComprob() (see corresponding helpfile for more details)
+# 3) Estimation with varComprob() (data must be sorted by cluster, see corresponding helpfile for more details)
 
 # Build the argument "groups" of the varComprob() function
 n = length(unique(participant)) # the number of participants
@@ -39,8 +39,16 @@ names(K) = c("sigma2_Intercept", "sigma2_Time", "Covariance")
 model.formula = Reaction ~ 1 + Days
 model.S = varComprob(model.formula, groups = groups, data = sleepstudy, varcov = K, control = varComprob.control(lower = c(0,0,-Inf), method = "S", psi = "rocke")) # Estimation with the classic S-estimator
 
+# 4) Wald-z 95% Confidence Intervals
+summ = summary(model.S)
+Wald_CI.S = matrix(c(model.S$beta[1] - summ$zTable[1,2]*qnorm(.975), model.S$beta[1] + summ$zTable[1,2]*qnorm(.975),
+                     model.S$beta[2] - summ$zTable[2,2]*qnorm(.975), model.S$beta[2] + summ$zTable[2,2]*qnorm(.975),
+                     model.S$eta[1] - sqrt(diag(model.S$vcov.eta))[1]*qnorm(.975), model.S$eta[1] + sqrt(diag(model.S$vcov.eta))[1]*qnorm(.975),
+                     model.S$eta[2] - sqrt(diag(model.S$vcov.eta))[2]*qnorm(.975), model.S$eta[2] + sqrt(diag(model.S$vcov.eta))[2]*qnorm(.975),
+                     model.S$eta[3] - sqrt(diag(model.S$vcov.eta))[3]*qnorm(.975), model.S$eta[3] + sqrt(diag(model.S$vcov.eta))[3]*qnorm(.975)), 5, 2,
+                     dimnames = list(c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"), c("lower bound", "upper bound")))
 
-# 4) Percentile Confidence Intervals wih the parametric bootstrap
+# 5) Percentile Confidence Intervals wih the parametric bootstrap
 parametric_S(model = model.S, Time = time, B = 999, level = .95)
 
 # ARGUMENTS

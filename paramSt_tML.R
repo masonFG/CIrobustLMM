@@ -18,7 +18,13 @@ sleepstudy
 # 3) Estimation with heavyLme() (see corresponding helpfile for more details)
 model.tML = heavyLme(Reaction ~ 1 + Days, random = ~ 1 + Days, groups = ~ Subject, data = sleepstudy)                   
 
-# 4) Percentile Confidence Intervals wih the Student-parametric bootstrap
+# 4) Wald-z 95% Confidence Intervals
+summ=summary(model.tML)
+Wald_CI.tML = t(matrix(c(coefficients(model.tML)[1] - summ$coefficients[1,2]*qnorm(.975), coefficients(model.tML)[1] + summ$coefficients[1,2]*qnorm(.975),
+                         coefficients(model.tML)[2] - summ$coefficients[2,2]*qnorm(.975), coefficients(model.tML)[2] + summ$coefficients[2,2]*qnorm(.975)), 2, 2,
+                         dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time"))))
+
+# 5) Percentile Confidence Intervals wih the parametric bootstrap
 paramSt_heavyLme( model = model.tML, Data = sleepstudy, B = 999, level = .95)
 
 # ARGUMENTS

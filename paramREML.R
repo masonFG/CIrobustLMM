@@ -14,9 +14,15 @@ source("CIfunction_paramREML.R")
 sleepstudy
 
 # 3) Estimation with lmer() (see corresponding helpfile for more details)
-model.REML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy)                   
+model.REML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy)
 
-# 4) Percentile Confidence Intervals with the parametric bootstrap
+# 4) Wald-z 95% Confidence Intervals
+summ=summary(model.REML)
+Wald_CI.REML = t(matrix(c(fixef(model.REML)[1] - summ$coefficients[1,2]*qnorm(.975), fixef(model.REML)[1] + summ$coefficients[1,2]*qnorm(.975),
+                          fixef(model.REML)[2] - summ$coefficients[2,2]*qnorm(.975), fixef(model.REML)[2] + summ$coefficients[2,2]*qnorm(.975)), 2, 2,
+                          dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time"))))
+
+# 5) Percentile Confidence Intervals with the parametric bootstrap
 param_lmer(model = model.REML, B = 999, level = .95)
 
 # ARGUMENTS
