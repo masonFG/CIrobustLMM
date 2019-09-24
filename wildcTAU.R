@@ -59,5 +59,4 @@ wild_cTAU(model = model.cTAU, id = participant, Time = time, B = 999, level = .9
 # level: confidence level < 1
 
 # VALUE
-# A matrix with columns giving estimate, lower and upper confidence limits for each parameter.
-
+# A matrix with columns giving lower and upper confidence limits for each parameter.
