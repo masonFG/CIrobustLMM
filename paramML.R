@@ -8,6 +8,7 @@
 # 1) Load the packages and functions
 library(lme4) # version 1.1-20
 library(MASS) # version 7.3-51.1
+library(doParallel) # version 1.0.14
 source("CIfunction_paramML.R")
 
 # 2) Import balanced dataset

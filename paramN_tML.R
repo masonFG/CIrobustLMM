@@ -10,6 +10,7 @@ library(lme4) # version 1.1-20
 library(heavy) # version 0.38.19
 library(MASS) # version 7.3-51.1
 library(stringr) # version 1.3.1
+library(doParallel) # version 1.0.14
 source("CIfunction_paramNheavyLme.R")
 
 # 2) Import balanced dataset

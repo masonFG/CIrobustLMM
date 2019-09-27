@@ -65,12 +65,20 @@ wild_lmerML <- function(model, B, level){
     Int[[i]] = diag(1,nt[i],nt[i])         
   }
   
-  tabella_boot = matrix(0, length(est), B)
-  rownames(tabella_boot) = names(est)
   rt_b = vector("list", TT)
   yt_b = vector("list", TT)
   
-  for (b in 1:B) {
+  # Bootstrap scheme
+  # Calculate the number of cores
+  no_cores <- detectCores() - 1
+
+  # Initiate cluster
+  cl <- makeCluster(no_cores)
+  registerDoParallel(cl)
+  
+  tAB = foreach (b = 1:B,
+		.combine = "rbind",
+		.packages = c("lme4", "MASS")) %dopar% {
     OK = FALSE
 	
     while(!OK){
@@ -81,46 +89,52 @@ wild_lmerML <- function(model, B, level){
         yt_b[[tt]] = Xt[[tt]]%*%bet + rt_b[[tt]]
       }
 	  
-      yboot = unlist(yt_b)
-	  bdd$yboot = yboot
-      formulrest = as.character(formula(model))[3]
-      formulboot = paste("yboot ~", formulrest)
-      model.bootr = lmer(formulboot, data = bdd, REML = F)                  
+      yboot 				= unlist(yt_b)
+	  bdd$yboot 			= yboot
+      formulrest 			= as.character(formula(model))[3]
+      formulboot 			= paste("yboot ~", formulrest)
+      model.bootr 			= lmer(formulboot, data = bdd, REML = F)                  
       
       if(length(model.bootr@optinfo$conv$lme4$messages) == 0){OK = TRUE}
     }
 	
-    summb = summary(model.bootr)
-    bet_boot = fixef(model.bootr)
-    sigma2_boot = sigma(model.bootr)^2
-    sigma2_u0_boot = as.matrix(summb$varcor[[1]])[1]
+    summb 					= summary(model.bootr)
+    bet_boot 				= fixef(model.bootr)
+    sigma2_boot 			= sigma(model.bootr)^2
+    sigma2_u0_boot 			= as.matrix(summb$varcor[[1]])[1]
+	
     if (length(model@theta) > 1) {
-      sigma2_u1_boot = as.matrix(summb$varcor[[1]])[4]
-      covariance_boot = as.matrix(summb$varcor[[1]])[2]
-      tabella_boot[,b] = c(bet_boot, sigma2_boot, sigma2_u0_boot, sigma2_u1_boot, covariance_boot)
+      sigma2_u1_boot 		= as.matrix(summb$varcor[[1]])[4]
+      covariance_boot 		= as.matrix(summb$varcor[[1]])[2]
+      result 				= c(bet_boot, sigma2_boot, sigma2_u0_boot, sigma2_u1_boot, covariance_boot)
     } else {
-      tabella_boot[,b] = c(bet_boot, sigma2_boot, sigma2_u0_boot)  
+      result 		= c(bet_boot, sigma2_boot, sigma2_u0_boot)  
     }
+	
+	result
   }
-  
-  results = list(tabella_boot)
-  names(results) = c("effects")
-  J = dim(results$effects)[1]
-  estim = NULL
+
+  stopImplicitCluster()
+  stopCluster(cl) # shut down the cluster
+
+  # Constructing Percentile Confidence Intervals
+  results 					= list(tAB)
+  names(results) 			= c("effects")
+  J 						= dim(results$effects)[2]
+  estim 					= NULL
   
   for(j in 1:J){
-    estim = c(estim,unname(quantile(t(results$effects)[,j], (1-level)/2, na.rm = T)),
-             unname(quantile(t(results$effects)[,j], 1-(1-level)/2, na.rm = T)))
+    estim 					= c(estim, unname(quantile(results$effects[,j], (1-level)/2, na.rm = T)), unname(quantile(results$effects[,j], 1-(1-level)/2, na.rm = T)))
   }
   
-  CI = t(matrix(estim, 2, J))
+  CI 						= t(matrix(estim,2,J))
   
   if(length(model@theta) > 1){
-    row.names(CI) = c(names(fixef(model)), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
+    row.names(CI) 			= c(names(fixef(model)), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
   }else{
-    row.names(CI) = c(names(fixef(model)), "sigma2", "sigma2intercept") 
+    row.names(CI) 			= c(names(fixef(model)), "sigma2", "sigma2intercept") 
   }
   
-  colnames(CI) = c("lower bound", "upper bound")
+  colnames(CI) 				= c("lower bound", "upper bound")
   return(CI)
 }

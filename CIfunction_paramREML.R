@@ -47,14 +47,17 @@ param_lmer <- function(model, B, level){
     names(est) 		= c("intercept", "time", "sigma2", "sigma2_intercept")  
   }
   
-  # Matrix for results
-  tabella_boot 				= matrix(0, length(est), B)
-  rownames(tabella_boot) 	= names(est)
-  result 					= NULL
-  resultr 					= NULL
-  
   # Bootstrap scheme
-  for (b in 1:B) {
+  # Calculate the number of cores
+  no_cores <- detectCores() - 1
+
+  # Initiate cluster
+  cl <- makeCluster(no_cores)
+  registerDoParallel(cl)
+  
+  tAB = foreach (b = 1:B,
+		.combine = "rbind",
+		.packages = c("lme4", "MASS")) %dopar% {
     OK 						= FALSE
 	
     while(!OK){
@@ -102,20 +105,25 @@ param_lmer <- function(model, B, level){
     if (length(model@theta) > 1) {
       sigma2_u1_boot 		= as.matrix(summb$varcor[[1]])[4]
       covariance_boot 		= as.matrix(summb$varcor[[1]])[2]
-      tabella_boot[,b] 		= c(bet_boot,sigma2_boot,sigma2_u0_boot,sigma2_u1_boot,covariance_boot)
+      result 				= c(bet_boot,sigma2_boot,sigma2_u0_boot,sigma2_u1_boot,covariance_boot)
     } else {
-      tabella_boot[,b] 		= c(bet_boot,sigma2_boot,sigma2_u0_boot)  
+      result 				= c(bet_boot,sigma2_boot,sigma2_u0_boot)  
     }
+	
+	result
   }
   
+  stopImplicitCluster()
+  stopCluster(cl) # shut down the cluster
+
   # Constructing Percentile Confidence Intervals
-  results 					= list(tabella_boot)
+  results 					= list(tAB)
   names(results) 			= c("effects")
-  J 						= dim(results$effects)[1]
+  J 						= dim(results$effects)[2]
   estim 					= NULL
   
   for(j in 1:J){
-    estim 					= c(estim, unname(quantile(t(results$effects)[,j], (1-level)/2, na.rm = T)), unname(quantile(t(results$effects)[,j], 1-(1-level)/2, na.rm = T)))
+    estim 					= c(estim, unname(quantile(results$effects[,j], (1-level)/2, na.rm = T)), unname(quantile(results$effects[,j], 1-(1-level)/2, na.rm = T)))
   }
   
   CI 						= t(matrix(estim,2,J))

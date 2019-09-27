@@ -9,6 +9,7 @@
 library(lme4) # version 1.1-20
 library(robustlmm) # version 2.3
 library(MASS) # version 7.3-51.1
+library(doParallel) # version 1.0.14
 source("CIfunction_paramREML.R")
 
 # 2) Import balanced dataset

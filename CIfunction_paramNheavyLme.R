@@ -42,15 +42,18 @@ paramN_heavyLme <- function(model, Data, B, level){
     est 			= c(bet, sigma2, sigma2_u0)
     names(est) 		= c("intercept", "time", "sigma2", "sigma2_intercept")  
   }
-  
-  # Matrix for results
-  resulth 					= NULL
-  result 					= NULL
-  tabella_boot 				= matrix(0, length(est), B)
-  rownames(tabella_boot) 	= names(est)
 
   # Bootstrap scheme
-  for (b in 1:B){
+  # Calculate the number of cores
+  no_cores <- detectCores() - 1
+
+  # Initiate cluster
+  cl <- makeCluster(no_cores)
+  registerDoParallel(cl)
+  
+  tAB = foreach (b = 1:B,
+		.combine = "rbind",
+		.packages = c("heavy", "MASS","stringr")) %dopar% {
     OK 						= FALSE
 	
     while(!OK){
@@ -102,30 +105,35 @@ paramN_heavyLme <- function(model, Data, B, level){
     if (length(model$theta) > 1) {
       sigma2_u1_boot 	= summb$theta[2,2]*(model$settings[3])/(model$settings[3]-2)
       covariance_boot 	= summb$theta[2,1]*(model$settings[3])/(model$settings[3]-2)
-      tabella_boot[,b] 	= c(bet_boot, sigma2_boot, sigma2_u0_boot, sigma2_u1_boot, covariance_boot)
+      result 			= c(bet_boot, sigma2_boot, sigma2_u0_boot, sigma2_u1_boot, covariance_boot)
     } else {
-      tabella_boot[,b] 	= c(bet_boot, sigma2_boot, sigma2_u0_boot)  
+      result 			= c(bet_boot, sigma2_boot, sigma2_u0_boot)  
     }
+	
+	result
   }
-  
+ 
+  stopImplicitCluster()
+  stopCluster(cl) # shut down the cluster
+
   # Constructing Percentile Confidence Intervals
-  results				= list(tabella_boot)
-  names(results) 		= c("effects")
-  J 					= dim(results$effects)[1]
-  estim 				= NULL
+  results 					= list(tAB)
+  names(results) 			= c("effects")
+  J 						= dim(results$effects)[2]
+  estim 					= NULL
   
   for(j in 1:J){
-    estim 				= c(estim, unname(quantile(t(results$effects)[,j], (1-level)/2, na.rm = T)), unname(quantile(t(results$effects)[,j], 1-(1-level)/2, na.rm = T)))
+    estim 					= c(estim, unname(quantile(results$effects[,j], (1-level)/2, na.rm = T)), unname(quantile(results$effects[,j], 1-(1-level)/2, na.rm = T)))
   }
   
-  CI 					= t(matrix(estim, 2, J))
+  CI 						= t(matrix(estim,2,J))
   
   if(length(model$theta) > 1){
-    row.names(CI) 		= c(names(model$coefficients), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
+    row.names(CI) 			= c(names(coefficients(model)), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
   }else{
-    row.names(CI) 		= c(names(model$coefficients), "sigma2", "sigma2_intercept") 
+    row.names(CI) 			= c(names(coefficients(model)), "sigma2", "sigma2intercept") 
   }
   
-  colnames(CI) 			= c("lower bound", "upper bound")
+  colnames(CI) 				= c("lower bound", "upper bound")
   return(CI)
 }
