@@ -28,7 +28,7 @@ The current repository contains two kind of scripts. the functions files (named 
   -paramSMDMvar.R: Example of parametric bootstrap CI (from CIfunction_paramREML.R) applied on the sleepstudy data fitted with the robust approximated version of SMDM method (Koller, 2013).
   -paramN_tML.R: Example of Normal-parametric bootstrap CI (from CIfunction_paramNheavyLme.R) applied on the sleepstudy data fitted with the robust multivariate t-ML method (Pinheiro et al., 2001).
   -paramSt_tML.R: Example of Student-parametric bootstrap CI (from CIfunction_paramStheavyLme.R) applied on the sleepstudy data fitted with the robust multivariate t-ML method (Pinheiro et al., 2001).
-  -wildML.R: Example of wild bootstrap CI (from CIfunction_wildML.R) applied on the sleepstudy data fitted with ML method.
+  -wildML.R: Example of wild bootstrap CI (from CIfunction_wildML.R) applied on the sleepstudy data fitted with ML method
   -wildREML.R: Example of wild bootstrap CI (from CIfunction_wildREML.R) applied on the sleepstudy data fitted with REML method.
   -wildcTAU.R: Example of wild bootstrap CI (from CIfunction_wildcTAU.R) applied on the sleepstudy data fitted with robust composite-TAU method.
   -wildS.R: Example of wild bootstrap CI (from CIfunction_wildcTAU.R) applied on the sleepstudy data fitted with robust  S method.
