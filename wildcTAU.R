@@ -49,7 +49,7 @@ Wald_CI.cTAU = matrix(c(model.cTAU$beta[1] - summ$zTable[1,2]*qnorm(.975), model
                         dimnames = list(c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"), c("lower bound", "upper bound")))
 
 # 5) Percentile Confidence Intervals wih the wild bootstrap
-wild_cTAU(model = model.cTAU, id = participant, Time = time, B = 999, level = .95)
+wild_cTAU(model = model.cTAU, id = participant, Time = time, B = 9, level = .95)
 
 # ARGUMENTS
 # model: an object of class varComprob or varComprob.fit or varComprob.S
