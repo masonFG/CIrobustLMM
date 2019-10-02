@@ -144,7 +144,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
     if(method == "Wald"){
       summ = summary(model)
       alpha = 1 - level
-      result = t(matrix(c(coefficients(model.)[1] - summ$coefficients[1,2]*qnorm(level+alpha/2), coefficients(model)[1] + summ$coefficients[1,2]*qnorm(level+alpha/2),
+      result = t(matrix(c(coefficients(model)[1] - summ$coefficients[1,2]*qnorm(level+alpha/2), coefficients(model)[1] + summ$coefficients[1,2]*qnorm(level+alpha/2),
                           coefficients(model)[2] - summ$coefficients[2,2]*qnorm(level+alpha/2), coefficients(model)[2] + summ$coefficients[2,2]*qnorm(level+alpha/2)), 2, 2,
                         dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time"))))
       
