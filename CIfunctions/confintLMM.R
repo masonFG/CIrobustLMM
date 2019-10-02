@@ -9,7 +9,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
   
   
   #Object of class varComprob.S (varComprob with S)
-  if(class(model)=="varComprob.S"){
+  if(class(model)[1]=="varComprob.S"){
     if(method == "parametric"){
       source("CIfunction_paramS.R")
       result = parametric_S(model = model, Time = Time, B = B, level = level)
@@ -37,7 +37,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
   }
   
   #Object of class varComprob.compositeTau (varComprob with cTAU)
-  if(class(model)=="varComprob.compositeTau"){
+  if(class(model)[1]=="varComprob.compositeTau"){
     if(method == "parametric"){
       source("CIfunction_paramcTAU.R")
       result = parametric_cTAU(model = model, Time = Time, B = B, level = level)
@@ -66,7 +66,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
   
   
   #Object of class lmerMod (lmer)
-  if(class(model)=="lmerMod"){
+  if(class(model)[1]=="lmerMod"){
     if(method == "parametric"){
     if(model@resp$REML == 0){
       source("CIfunction_paramML.R")
@@ -103,7 +103,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
   
   
   #Object of class rlmerMod (rlmer)
-  if(class(model)=="rlmerMod"){
+  if(class(model)[1]=="rlmerMod"){
     if(method == "parametric"){
       source("CIfunction_paramREML.R")
       result = param_lmer(model = model, B = B, level = level)
@@ -128,7 +128,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
   
   
   #Object of class heavyLme
-  if(class(model)=="heavyLme"){
+  if(class(model)[1]=="heavyLme"){
     if(method == "parametric"){
       source("CIfunction_paramNheavyLme.R")
       result = paramN_heavyLme(model = model, Data = Data, B = B, level = level)
