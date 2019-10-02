@@ -40,7 +40,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
   if(class(model)=="varComprob.compositeTau"){
     if(method == "parametric"){
       source("CIfunction_paramcTAU.R")
-      result = param_cTAU(model = model, Time = Time, B = B, level = level)
+      result = parametric_cTAU(model = model, Time = Time, B = B, level = level)
       return(result)
     }
     if(method == "wild"){
