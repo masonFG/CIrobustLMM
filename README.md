@@ -1,40 +1,17 @@
 CIrobustLMM
  
- Contains R scripts to calculate percentile confidence intervals based on bootstrap schemes or with Wald-z for robust and classical linear mixed models. Two bootstrap schemes are implemented : the wild bootstrap (Giannerini & Modugno, 2013) and the parametric bootstrap. Both of them are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp), heavyLme (from package heavy) and rlmerMod (from package robustlmm). An example of longitudinal linear mixed model on the sleepstudy data is provided.
+ Contains R scripts to calculate percentile confidence intervals based on bootstrap schemes or with Wald-z for robust and classical linear mixed models for balanced longitudinal data. Two bootstrap schemes are implemented : the wild bootstrap (Giannerini & Modugno, 2013) and the parametric bootstrap. Both of them are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp), heavyLme (from package heavy) and rlmerMod (from package robustlmm). An example of longitudinal linear mixed model on the sleepstudy data is provided.
 
 Contents
  
- The current repository contains a folder with the functions files (named with prefix "CIfunction_") which must be downloaded to execute 
+ The file "CI_LMM_example.R" contains an example of application of the function confint.lmm() on the sleepstudy data. It includes estimation with lmer() for methods ML and REML (e.g. Bates, 2014), rlmer() for methods "DAStau" and "DASvar" (e.g. Koller, 2016), varComprob() for methods S and composite-tau (see Agostinelli & Yohai, 2016) and heavyLme() with the multivariate t-ML method (Pinheiro et al., 2001). Users can adapted this document to their own dataset.
+ 
+ 
+ The folder CIfunctions contains the functions files. It must be downloaded to execute the function confint.lmm(). The file "confintLMM.R" contains the function confint.lmm() which calls others functions contained in the folder (the files called by the prefix "CIfunctions_") depending of method of estimation selected and the type of confidence interval.
   
-  "Functions":
-  - CIfunction_paramML.R: the function of the parametric bootstrap with ML estimation (via lmer from lme4) on the bootstrap samples. Available for objects of class merMod and rlmerMod. 
-  - CIfunction_paramREML.R: the function of the parametric bootstrap with REML estimation (via lmer from lme4) on the bootstrap samples. Available for objects of class merMod and rlmerMod. 
-  - CIfunction_paramcTAU.R: the function of the parametric bootstrap with composite-TAU robust estimation of Agostinelli and Yohai (2016) (via varComprob from robustvarComp) on the bootstrap samples. Available for objects of class varComprob (or varComprob.fit or varComprob.S).
-  - CIfunction_paramS.R: the function of the parametric bootstrap with the robust S estimation of Copt and Victoria-Feser (2006) (via varComprob from robustvarComp) on the bootstrap samples. Available for objects of class varComprob (or varComprob.fit or varComprob.S).
-  - CIfunction_paramNheavyLme.R: the function of the Normal-parametric bootstrap with the robust multivariate t-ML estimation of Pinheiro et al. (2001) (via heavyLme from heavy) on the bootstrap samples. Available for objects of class heavyLme.
-  - CIfunction_paramStheavyLme.R: the function of a Student-parametric bootstrap (residuals and random effect are generated from t distributions) with the robust multivariate t-ML estimation of Pinheiro et al. (2001) (via heavyLme from heavy) on the bootstrap samples. Available for objects of class heavyLme.
-  - CIfunction_wildML.R: the function of the wild bootstrap with ML estimation (via lmer from lme4) on the bootstrap samples. Available for objects of class merMod and rlmerMod. 
-  - CIfunction_wildREML.R: the function of the wild bootstrap with REML estimation (via lmer from lme4) on the bootstrap samples. Available for objects of class merMod and rlmerMod. 
-  - CIfunction_wildcTAU.R: the function of the wild bootstrap with composite-TAU robust estimation of Agostinelli and Yohai (2016) (via varComprob from robustvarComp) on the bootstrap samples. Available for objects of class varComprob (or varComprob.fit or varComprob.S).
-  - CIfunction_wildS.R: the function of the wild bootstrap with the robust S estimation of Copt and Victoria-Feser (2006) (via varComprob from robustvarComp) on the bootstrap samples. Available for objects of class varComprob (or varComprob.fit or varComprob.S).
-  - CIfunction_wildheavyLme.R: the function of the wild bootstrap with the robust multivariate t-ML estimation of Pinheiro et al. (2001) (via heavyLme from heavy) on the bootstrap samples. Available for objects of class heavyLme.
+ 
   
-  "Running":
-  - paramML.R: Example of parametric bootstrap CI (from CIfunction_paramML.R) applied on the sleepstudy data fitted with ML method.
-  - paramREML.R: Example of parametric bootstrap CI (from CIfunction_paramREML.R) applied on the sleepstudy data fitted with REML method.
-  - paramcTAU.R: Example of parametric bootstrap CI (from CIfunction_paramcTAU.R) applied on the sleepstudy data fitted with robust composite-TAU method.
-  - paramS.R: Example of parametric bootstrap CI (from CIfunction_paramcTAU.R) applied on the sleepstudy data fitted with robust  S method.
-  - paramSMDM.R: Example of parametric bootstrap CI (from CIfunction_paramREML.R) applied on the sleepstudy data fitted with robust SMDM method (Koller, 2013).
-  - paramSMDMvar.R: Example of parametric bootstrap CI (from CIfunction_paramREML.R) applied on the sleepstudy data fitted with the robust approximated version of SMDM method (Koller, 2013).
-  - paramN_tML.R: Example of Normal-parametric bootstrap CI (from CIfunction_paramNheavyLme.R) applied on the sleepstudy data fitted with the robust multivariate t-ML method (Pinheiro et al., 2001).
-  - paramSt_tML.R: Example of Student-parametric bootstrap CI (from CIfunction_paramStheavyLme.R) applied on the sleepstudy data fitted with the robust multivariate t-ML method (Pinheiro et al., 2001).
-  - wildML.R: Example of wild bootstrap CI (from CIfunction_wildML.R) applied on the sleepstudy data fitted with ML method
-  - wildREML.R: Example of wild bootstrap CI (from CIfunction_wildREML.R) applied on the sleepstudy data fitted with REML method.
-  - wildcTAU.R: Example of wild bootstrap CI (from CIfunction_wildcTAU.R) applied on the sleepstudy data fitted with robust composite-TAU method.
-  - wildS.R: Example of wild bootstrap CI (from CIfunction_wildcTAU.R) applied on the sleepstudy data fitted with robust  S method.
-  - wildSMDM.R: Example of wild bootstrap CI (from CIfunction_wildREML.R) applied on the sleepstudy data fitted with robust SMDM method (Koller, 2013).
-  - wildSMDMvar.R: Example of wild bootstrap CI (from CIfunction_wildREML.R) applied on the sleepstudy data fitted with the robust approximated version of SMDM method (Koller, 2013).
-  - wild_tML.R: Example of wild bootstrap CI (from CIfunction_wildheavyLme.R) applied on the sleepstudy data fitted with the robust multivariate t-ML method (Pinheiro et al., 2001).
+  
  
 References
 
