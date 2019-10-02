@@ -7,6 +7,64 @@
 
 confint.LMM <- function(model, Data, id, Time, method, B, level){
   
+  
+  #Object of class varComprob.S (varComprob with S)
+  if(class(model)=="varComprob.S"){
+    if(method == "parametric"){
+      source("CIfunction_paramS.R")
+      result = parametric_S(model = model, Time = Time, B = B, level = level)
+      return(result)
+    }
+    if(method == "wild"){
+      source("CIfunction_wildS.R")
+      result = wild_S(model = model, id = id, Time = Time, B = B, level = level)
+      return(result)
+    }
+    if(method == "Wald"){
+      summ = summary(model)
+      alpha = 1 - level
+      result = t(matrix(c(model.S$beta[1] - summ$zTable[1,2]*qnorm(level+alpha/2), model.S$beta[1] + summ$zTable[1,2]*qnorm(level+alpha/2),
+                            model.S$beta[2] - summ$zTable[2,2]*qnorm(level+alpha/2), model.S$beta[2] + summ$zTable[2,2]*qnorm(level+alpha/2),
+                            model.S$eta[1] - sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2), model$eta[1] + sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2),
+                            model.S$eta[2] - sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2), model$eta[2] + sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2),
+                            model.S$eta[3] - sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2), model$eta[3] + sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2)), 2, 5,
+                          dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"))))
+      
+      return(result)
+    }else{
+      print("Error! Probably an incorrect value for method argument")
+    }
+  }
+  
+  #Object of class varComprob.compositeTau (varComprob with cTAU)
+  if(class(model)=="varComprob.compositeTau"){
+    if(method == "parametric"){
+      source("CIfunction_paramcTAU.R")
+      result = param_cTAU(model = model, Time = Time, B = B, level = level)
+      return(result)
+    }
+    if(method == "wild"){
+      source("CIfunction_wildcTAU.R")
+      result = wild_cTAU(model = model, id = id, Time = Time, B = B, level = level)
+      return(result)
+    }
+    if(method == "Wald"){
+      summ = summary(model)
+      alpha = 1 - level
+      result = t(matrix(c(model.S$beta[1] - summ$zTable[1,2]*qnorm(level+alpha/2), model.S$beta[1] + summ$zTable[1,2]*qnorm(level+alpha/2),
+                          model.S$beta[2] - summ$zTable[2,2]*qnorm(level+alpha/2), model.S$beta[2] + summ$zTable[2,2]*qnorm(level+alpha/2),
+                          model.S$eta[1] - sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2), model$eta[1] + sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2),
+                          model.S$eta[2] - sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2), model$eta[2] + sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2),
+                          model.S$eta[3] - sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2), model$eta[3] + sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2)), 2, 5,
+                        dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"))))
+      
+      return(result)
+    }else{
+      print("Error! Probably an incorrect value for method argument")
+    }
+  }
+  
+  
   #Object of class lmerMod (lmer)
   if(class(model)=="lmerMod"){
     if(method == "parametric"){
@@ -68,61 +126,6 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
       }
   }
   
-  #Object of class varComprob.S (varComprob with S)
-  if(class(model)=="varComprob.S"){
-    if(method == "parametric"){
-      source("CIfunction_paramS.R")
-      result = parametric_S(model = model, Time = Time, B = B, level = level)
-      return(result)
-    }
-    if(method == "wild"){
-      source("CIfunction_wildS.R")
-      result = wild_S(model = model, id = id, Time = Time, B = B, level = level)
-      return(result)
-    }
-    if(method == "Wald"){
-      summ = summary(model)
-      alpha = 1 - level
-      result = t(matrix(c(model.S$beta[1] - summ$zTable[1,2]*qnorm(level+alpha/2), model.S$beta[1] + summ$zTable[1,2]*qnorm(level+alpha/2),
-                            model.S$beta[2] - summ$zTable[2,2]*qnorm(level+alpha/2), model.S$beta[2] + summ$zTable[2,2]*qnorm(level+alpha/2),
-                            model.S$eta[1] - sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2), model$eta[1] + sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2),
-                            model.S$eta[2] - sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2), model$eta[2] + sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2),
-                            model.S$eta[3] - sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2), model$eta[3] + sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2)), 2, 5,
-                          dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"))))
-      
-      return(result)
-    }else{
-      print("Error! Probably an incorrect value for method argument")
-    }
-  }
-  
-  #Object of class varComprob.compositeTau (varComprob with cTAU)
-  if(class(model)=="varComprob.compositeTau"){
-    if(method == "parametric"){
-      source("CIfunction_paramcTAU.R")
-      result = param_cTAU(model = model, Time = Time, B = B, level = level)
-      return(result)
-    }
-    if(method == "wild"){
-      source("CIfunction_wildcTAU.R")
-      result = wild_cTAU(model = model, id = id, Time = Time, B = B, level = level)
-      return(result)
-    }
-    if(method == "Wald"){
-      summ = summary(model)
-      alpha = 1 - level
-      result = t(matrix(c(model.S$beta[1] - summ$zTable[1,2]*qnorm(level+alpha/2), model.S$beta[1] + summ$zTable[1,2]*qnorm(level+alpha/2),
-                          model.S$beta[2] - summ$zTable[2,2]*qnorm(level+alpha/2), model.S$beta[2] + summ$zTable[2,2]*qnorm(level+alpha/2),
-                          model.S$eta[1] - sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2), model$eta[1] + sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2),
-                          model.S$eta[2] - sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2), model$eta[2] + sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2),
-                          model.S$eta[3] - sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2), model$eta[3] + sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2)), 2, 5,
-                        dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"))))
-      
-      return(result)
-    }else{
-      print("Error! Probably an incorrect value for method argument")
-    }
-  }
   
   #Object of class heavyLme
   if(class(model)=="heavyLme"){
