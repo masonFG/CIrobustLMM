@@ -45,10 +45,10 @@ paramN_heavyLme <- function(model, Data, B, level){
 
   # Bootstrap scheme
   # Calculate the number of cores
-  no_cores <- detectCores() - 1
+  no_cores 		= detectCores() - 1
 
   # Initiate cluster
-  cl <- makeCluster(no_cores)
+  cl 			= makeCluster(no_cores)
   registerDoParallel(cl)
   
   tAB = foreach (b = 1:B,

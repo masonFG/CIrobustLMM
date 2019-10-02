@@ -97,7 +97,7 @@ wild_S <- function(model, id, Time, B, level){
       my.DATA$yboot 	= yboot
       formulrest 		= as.character(formula(model))[3]
       formulboot 		= paste("yboot ~", formulrest)
-      model.bootr 		= try(varComprob(formulboot, groups = groups, data = my.DATA, varcov = K, control = varComprob.control(lower = c (0, 0, -Inf), method = "S", psi = "rocke")))
+      model.bootr 		= try(varComprob(formulboot, groups = groups, data = my.DATA, varcov = K, control = varComprob.control(lower = c (0, 0, -Inf), method = "S", psi = "rocke")), silent = T)
 	  
       if(class(model.bootr) != "try-error"){OK = TRUE}
     }

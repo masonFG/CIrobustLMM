@@ -41,12 +41,12 @@ model.cTAU = varComprob(model.formula, groups = groups,data = sleepstudy, varcov
 
 # 4) Wald-z 95% Confidence Intervals
 summ = summary(model.cTAU)
-Wald_CI.cTAU = t(matrix(c(model.cTAU$beta[1] - summ$zTable[1,2]*qnorm(.975), model.cTAU$beta[1] + summ$zTable[1,2]*qnorm(.975),
+Wald_CI.cTAU = matrix(c(model.cTAU$beta[1] - summ$zTable[1,2]*qnorm(.975), model.cTAU$beta[1] + summ$zTable[1,2]*qnorm(.975),
                         model.cTAU$beta[2] - summ$zTable[2,2]*qnorm(.975), model.cTAU$beta[2] + summ$zTable[2,2]*qnorm(.975),
                         model.cTAU$eta[1] - sqrt(diag(model.cTAU$vcov.eta))[1]*qnorm(.975), model.cTAU$eta[1] + sqrt(diag(model.cTAU$vcov.eta))[1]*qnorm(.975),
                         model.cTAU$eta[2] - sqrt(diag(model.cTAU$vcov.eta))[2]*qnorm(.975), model.cTAU$eta[2] + sqrt(diag(model.cTAU$vcov.eta))[2]*qnorm(.975),
-                        model.cTAU$eta[3] - sqrt(diag(model.cTAU$vcov.eta))[3]*qnorm(.975), model.cTAU$eta[3] + sqrt(diag(model.cTAU$vcov.eta))[3]*qnorm(.975)), 2, 5,
-                        dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"))))
+                        model.cTAU$eta[3] - sqrt(diag(model.cTAU$vcov.eta))[3]*qnorm(.975), model.cTAU$eta[3] + sqrt(diag(model.cTAU$vcov.eta))[3]*qnorm(.975)), 5, 2,
+                        dimnames = list(c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"), c("lower bound", "upper bound")))
 
 # 5) Percentile Confidence Intervals wih the parametric bootstrap
 parametric_cTAU(model = model.cTAU, Time = time, B = 999, level = .95)

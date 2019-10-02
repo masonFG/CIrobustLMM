@@ -8,72 +8,72 @@
 wild_lmerML <- function(model, B, level){
   
   if (length(model@theta) > 1){                              
-    P = 2
+    P 	= 2
   } else{
-    P = 1
+    P 	= 1
   }
   
-  bdd = model@frame
-  y = model@resp$y
-  effetsfix = names(fixef(model))[-1] 
-  matfix = unname(cbind(rep(1,dim(bdd)[1]),bdd[effetsfix]))
-  nomID = names(summary(model)$ngrps)[1]
-  id = bdd[nomID]
-  names(id) = ""
-  bdd$id = id
-  summ = summary(model)
-  n = nrow(bdd)
-  bet = as.vector(unname(fixef(model)))
-  sigma2 = sigma(model)^2
-  sigma2_u0 = as.matrix(summ$varcor[[1]])[1]
+  bdd 			= model@frame
+  y 			= model@resp$y
+  effetsfix 	= names(fixef(model))[-1] 
+  matfix 		= unname(cbind(rep(1,dim(bdd)[1]),bdd[effetsfix]))
+  nomID 		= names(summary(model)$ngrps)[1]
+  id 			= bdd[nomID]
+  names(id) 	= ""
+  bdd$id 		= id
+  summ 			= summary(model)
+  n 			= nrow(bdd)
+  bet 			= as.vector(unname(fixef(model)))
+  sigma2 		= sigma(model)^2
+  sigma2_u0 	= as.matrix(summ$varcor[[1]])[1]
   
   if (length(model@theta) > 1) {
-    sigma2_u1 = as.matrix(summ$varcor[[1]])[4]
-    covariance = as.matrix(summ$varcor[[1]])[2]
-    est = c(bet, sigma2, sigma2_u0, sigma2_u1, covariance)
-    names(est) = c("intercept", "time", "sigma2", "sigma2_u0", "sigma2_u1", "covariance")
+    sigma2_u1 	= as.matrix(summ$varcor[[1]])[4]
+    covariance 	= as.matrix(summ$varcor[[1]])[2]
+    est 		= c(bet, sigma2, sigma2_u0, sigma2_u1, covariance)
+    names(est) 	= c("intercept", "time", "sigma2", "sigma2_u0", "sigma2_u1", "covariance")
   } else {
-    est = c(bet, sigma2, sigma2_u0)
-    names(est) = c("intercept", "time", "sigma2", "sigma2_u0")  
+    est 		= c(bet, sigma2, sigma2_u0)
+    names(est) 	= c("intercept", "time", "sigma2", "sigma2_u0")  
   }
   
-  v1 = -(sqrt(5) - 1) /2 
-  v2 = (sqrt(5) + 1) /2 
-  p1 = (sqrt(5) + 1) /(2 * sqrt(5)) 
-  p2 = 1 - p1 
-  rand = table(bdd$id)
-  TT = length(rand)
-  nt = unname(rand)
-  X = matrix(1,n,1)
-  reg = attr(terms(formula(model)), "term.labels")
-  X = model.matrix(model, data = as.data.frame(bdd[,reg]))
-  XX = as.matrix(unname(X))                                                 
-  Xt = as.matrix(unname(vector("list", TT)) )                                
-  yt = as.matrix(vector("list", TT))
-  rt_hat = as.matrix(vector("list", TT))
-  Pt = as.matrix(vector("list", TT))
-  Int = as.matrix(vector("list", TT))
-  tXX = as.matrix(unname(solve(t(X)%*%X)))          
+  v1 			= -(sqrt(5) - 1) /2 
+  v2 			= (sqrt(5) + 1) /2 
+  p1 			= (sqrt(5) + 1) /(2 * sqrt(5)) 
+  p2 			= 1 - p1 
+  rand 			= table(bdd$id)
+  TT 			= length(rand)
+  nt 			= unname(rand)
+  X 			= matrix(1,n,1)
+  reg 			= attr(terms(formula(model)), "term.labels")
+  X 			= model.matrix(model, data = as.data.frame(bdd[,reg]))
+  XX 			= as.matrix(unname(X))                                                 
+  Xt 			= as.matrix(unname(vector("list", TT)) )                                
+  yt 			= as.matrix(vector("list", TT))
+  rt_hat 		= as.matrix(vector("list", TT))
+  Pt 			= as.matrix(vector("list", TT))
+  Int 			= as.matrix(vector("list", TT))
+  tXX 			= as.matrix(unname(solve(t(X)%*%X)))          
   
   for (i in 1:TT) {
-    Xt[[i]] = XX[1:nt[i],]                
-    XX = XX[-(1:nt[i]),]             
-    yt[[i]] = y[1:nt[i]]                  
-    y = y[-(1:nt[i])]               
+    Xt[[i]] 	= XX[1:nt[i],]                
+    XX 			= XX[-(1:nt[i]),]             
+    yt[[i]] 	= y[1:nt[i]]                  
+    y 			= y[-(1:nt[i])]               
     rt_hat[[i]] = yt[[i]] - Xt[[i]]%*%bet   
-    Pt[[i]] = Xt[[i]]%*%tXX%*%t(Xt[[i]])  
-    Int[[i]] = diag(1,nt[i],nt[i])         
+    Pt[[i]] 	= Xt[[i]]%*%tXX%*%t(Xt[[i]])  
+    Int[[i]] 	= diag(1,nt[i],nt[i])         
   }
   
-  rt_b = vector("list", TT)
-  yt_b = vector("list", TT)
+  rt_b 			= vector("list", TT)
+  yt_b 			= vector("list", TT)
   
   # Bootstrap scheme
   # Calculate the number of cores
-  no_cores <- detectCores() - 1
+  no_cores 		= detectCores() - 1
 
   # Initiate cluster
-  cl <- makeCluster(no_cores)
+  cl 			= makeCluster(no_cores)
   registerDoParallel(cl)
   
   tAB = foreach (b = 1:B,

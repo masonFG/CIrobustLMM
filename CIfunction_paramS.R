@@ -94,8 +94,8 @@ parametric_S <- function(model, Time, B, level){
   estimatesS 			= NULL
   
   for(i in 1:dim(pboot)[2]){
-    estimatesS[[i]] 			= c(estim[i], unname(quantile(pboot[,i], c(((1-level)/2), 1-((1-level)/2)), na.rm = T)))
-    names(estimatesS[[i]]) 		= c("Estimate", "lower bound", "upper bound")
+    estimatesS[[i]] 			= c(unname(quantile(pboot[,i], c(((1-level)/2), 1-((1-level)/2)), na.rm = T)))
+    names(estimatesS[[i]]) 		= c("lower bound", "upper bound")
 	}
 	
   names(estimatesS) 	= colnames(pboot)

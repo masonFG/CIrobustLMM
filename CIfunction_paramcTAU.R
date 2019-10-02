@@ -20,7 +20,7 @@ parametric_cTAU <- function(model, Time, B, level){
   matfix 	= as.matrix(matfix)
   
   if(length(model$K) > 1){
-  Zmatrix = matrix(c(rep(1, n_obs), Time), nrow = n_obs, ncol = 2)
+  Zmatrix 				= matrix(c(rep(1, n_obs), Time), nrow = n_obs, ncol = 2)
   
   if(length(model$K) > 2){
       ranefmatrix 		= matrix(c(model$eta[1], model$eta[3], model$eta[3], model$eta[2]), 2, 2)
@@ -91,8 +91,8 @@ parametric_cTAU <- function(model, Time, B, level){
   estimatesS 			= NULL
   
   for(i in 1:dim(pboot)[2]){
-    estimatesS[[i]] 		= c(estim[i], unname(quantile(pboot[,i], c(((1-level)/2), 1-((1-level)/2)), na.rm = T)))
-    names(estimatesS[[i]]) 	= c("Estimate", "lower bound", "upper bound")
+    estimatesS[[i]] 		= c(unname(quantile(pboot[,i], c(((1-level)/2), 1-((1-level)/2)), na.rm = T)))
+    names(estimatesS[[i]]) 	= c("lower bound", "upper bound")
 	}
 	
   names(estimatesS) 	= colnames(pboot)

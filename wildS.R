@@ -41,12 +41,12 @@ model.S = varComprob(model.formula, groups = groups, data = sleepstudy, varcov =
 
 # 4) Wald-z 95% Confidence Intervals
 summ = summary(model.S)
-Wald_CI.S = t(matrix(c(model.S$beta[1] - summ$zTable[1,2]*qnorm(.975), model.S$beta[1] + summ$zTable[1,2]*qnorm(.975),
+Wald_CI.S = matrix(c(model.S$beta[1] - summ$zTable[1,2]*qnorm(.975), model.S$beta[1] + summ$zTable[1,2]*qnorm(.975),
                      model.S$beta[2] - summ$zTable[2,2]*qnorm(.975), model.S$beta[2] + summ$zTable[2,2]*qnorm(.975),
                      model.S$eta[1] - sqrt(diag(model.S$vcov.eta))[1]*qnorm(.975), model.S$eta[1] + sqrt(diag(model.S$vcov.eta))[1]*qnorm(.975),
                      model.S$eta[2] - sqrt(diag(model.S$vcov.eta))[2]*qnorm(.975), model.S$eta[2] + sqrt(diag(model.S$vcov.eta))[2]*qnorm(.975),
-                     model.S$eta[3] - sqrt(diag(model.S$vcov.eta))[3]*qnorm(.975), model.S$eta[3] + sqrt(diag(model.S$vcov.eta))[3]*qnorm(.975)), 2, 5,
-                     dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"))))
+                     model.S$eta[3] - sqrt(diag(model.S$vcov.eta))[3]*qnorm(.975), model.S$eta[3] + sqrt(diag(model.S$vcov.eta))[3]*qnorm(.975)), 5, 2,
+                     dimnames = list(c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"), c("lower bound", "upper bound")))
 
 # 5) Percentile Confidence Intervals wih the wild bootstrap
 wild_S(model = model.S, id = participant, Time = time, B = 999, level = .95)
