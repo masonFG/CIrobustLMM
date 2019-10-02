@@ -12,7 +12,7 @@ library(robustlmm) # version 2.3
 library(heavy) # version 0.38.19
 library(lme4) # version 1.1-20
 library(doParallel) # version 1.0.14
-
+source("confintLMM.R") # function to produce confidence intervals
 
 # 2) Import balanced dataset and define time and participant variable
 sleepstudy
