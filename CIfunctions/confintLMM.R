@@ -140,7 +140,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
       return(result)
     }
     if(method == "wild"){
-      source("CIfunction_wildcTAU.R")
+      source("CIfunction_wildheavyLme.R")
       result = wild_heavyLme(model = model, Data = Data, B = B, level = level)
       return(result)
     }
