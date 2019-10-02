@@ -1,10 +1,10 @@
 CIrobustLMM
  
- Contains R scripts to calculate percentile confidence intervals based on bootstrap schemes for robust linear mixed models. Two bootstrap schemes are implemented : the wild bootstrap (Giannerini & Modugno, 2013) and the parametric bootstrap. Both of them are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp), heavyLme (from package heavy) and rlmerMod (from package robustlmm). Current files illustrate an example of longitudinal linear mixed model on the sleepstudy data providing Confidence Intervals (CI) for the fixed effects (intercept and slope) and for the variance components (variances of residuals, of random intercept and random slope effects and the covariance between them.
+ Contains R scripts to calculate percentile confidence intervals based on bootstrap schemes or with Wald-z for robust and classical linear mixed models. Two bootstrap schemes are implemented : the wild bootstrap (Giannerini & Modugno, 2013) and the parametric bootstrap. Both of them are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp), heavyLme (from package heavy) and rlmerMod (from package robustlmm). An example of longitudinal linear mixed model on the sleepstudy data is provided.
 
 Contents
  
- The current repository contains two kind of scripts. the functions files (named with prefix "CIfunction_") and the running files.
+ The current repository contains a folder with the functions files (named with prefix "CIfunction_") which must be downloaded to execute 
   
   "Functions":
   - CIfunction_paramML.R: the function of the parametric bootstrap with ML estimation (via lmer from lme4) on the bootstrap samples. Available for objects of class merMod and rlmerMod. 
