@@ -5,7 +5,10 @@
 # Comment: R code for analyses presented in titres-du-papier - this script contains the sleepstudy example and can be adapted to your own balanced dataset
 # ---------------------------------------------------------------------
 
-# 1) Load the packages
+# 1) Set working directory (modify the path and select the folder "CIfunctions")
+setwd(".../CIfunctions")
+
+# 2) Load the packages
 library(MASS) # version 7.3-51.1
 library(robustvarComp) # version 0.1-2
 library(robustlmm) # version 2.3
@@ -14,16 +17,13 @@ library(lme4) # version 1.1-20
 library(doParallel) # version 1.0.14
 source("confintLMM.R") # function to produce confidence intervals
 
-# 2) Import balanced dataset and define time and participant variable
+# 3) Import balanced dataset and define time and participant variable
 sleepstudy
 
 # Identify dataset, time and participant variables
 Dataset = sleepstudy
 time = sleepstudy$Days
 participant = sleepstudy$Subject
-
-# 3) Set working directory (select the folder "CIfunctions")
-setwd("..../CIfunctions")
 
 # 4a) Estimation with varComprob() (see corresponding helpfile for more details)
 
