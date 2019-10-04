@@ -1,13 +1,14 @@
 CIrobustLMM
 
-Contains a set of R functions and scripts to compute percentile confidence intervals based on bootstrap schemes or with Wald-z, for linear mixed models estimated both with classical and robust methods. It allows for balanced longitudinal data designs. Two bootstrap schemes are implemented : the wild bootstrap and the parametric bootstrap. Both of them are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp), heavyLme (from package heavy) and rlmerMod (from package robustlmm). A fully worked out example of longitudinal linear mixed model on the sleepstudy data is provided.
+Contains a set of R functions and scripts to compute percentile confidence intervals based on bootstrap schemes or with Wald-z, for linear mixed models estimated with both classical and robust methods. The scripts allow for balanced longitudinal data designs. Two bootstrap schemes are implemented: the wild bootstrap and the parametric bootstrap. Both are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp), heavyLme (from package heavy) and rlmerMod (from package robustlmm). A fully worked out example of longitudinal linear mixed model on the sleepstudy data is provided.
 
 Contents
 
 The main function is confint.lmm(). 
 
-The file "CI_LMM_example.R" contains an example of its application on the sleepstudy data. It includes estimation with lmer() for methods ML and REML (e.g. Bates, 2014), rlmer() with options "DAStau" and "DASvar" (e.g. Koller, 2016), varComprob() for methods S and composite-tau (see Agostinelli & Yohai, 2016) and heavyLme() with the multivariate t-ML method (Pinheiro et al., 2001). Users can adapted this document to their own dataset.
-The folder CIfunctions contains the auxiliary functions files. It must be downloaded and sourced  before using the function confint.lmm().  More specifically, the file "confintLMM.R" contains the function confint.lmm() which calls others functions contained in the folder (the files called by the prefix "CIfunctions_") depending of method of estimation selected and the type of confidence interval chosen.
+The file "CI_LMM_example.R" contains an example of its application on the sleepstudy data. It includes estimation with lmer() for methods ML and REML (e.g. Bates, 2014), rlmer() with options "DAStau" and "DASvar" (e.g. Koller, 2016), varComprob() for methods S and composite-tau (see Agostinelli & Yohai, 2016) and heavyLme() with the multivariate t-ML method (Pinheiro et al., 2001). Users can adapt this document to their own dataset.
+The folder CIfunctions contains the auxiliary functions files, which must be downloaded and sourced before using the function confint.lmm().  More specifically, the file "confintLMM.R" contains the function confint.lmm(), which calls others functions contained in the folder (the files called by the prefix "CIfunctions_") depending on which estimation method is selected and which type of confidence interval is chosen.
+
 
 
   
