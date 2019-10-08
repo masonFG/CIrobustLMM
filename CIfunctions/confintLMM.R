@@ -24,10 +24,10 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
       summ = summary(model)
       alpha = 1 - level
       result = t(matrix(c(model.S$beta[1] - summ$zTable[1,2]*qnorm(level+alpha/2), model.S$beta[1] + summ$zTable[1,2]*qnorm(level+alpha/2),
-                            model.S$beta[2] - summ$zTable[2,2]*qnorm(level+alpha/2), model.S$beta[2] + summ$zTable[2,2]*qnorm(level+alpha/2),
-                            model.S$eta[1] - sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2), model$eta[1] + sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2),
-                            model.S$eta[2] - sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2), model$eta[2] + sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2),
-                            model.S$eta[3] - sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2), model$eta[3] + sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2)), 2, 5,
+                          model.S$beta[2] - summ$zTable[2,2]*qnorm(level+alpha/2), model.S$beta[2] + summ$zTable[2,2]*qnorm(level+alpha/2),
+                          model.S$eta[1] - sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2), model$eta[1] + sqrt(diag(model$vcov.eta))[1]*qnorm(level+alpha/2),
+                          model.S$eta[2] - sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2), model$eta[2] + sqrt(diag(model$vcov.eta))[2]*qnorm(level+alpha/2),
+                          model.S$eta[3] - sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2), model$eta[3] + sqrt(diag(model$vcov.eta))[3]*qnorm(level+alpha/2)), 2, 5,
                           dimnames = list(c("lower bound", "upper bound"), c("Intercept", "Time", "Sigma2_intercept", "Sigma2_time", "Covariance"))))
       
       return(result)

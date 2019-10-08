@@ -14,12 +14,27 @@ wild_heavyLme <- function(model, Data, B, level){
     P 	= 1
   }
   
+  #interaction
+  inter = grep(pattern = ":" , names(coefficients(model)), value = TRUE, fixed = TRUE)
+  
+  if(!is.null(inter)){
+    var.inter = strsplit(inter, split = ":" , fixed = TRUE)
+  }
+  
   # Dataset informations
   varnames 		= all.vars(model$call)
   bdd 			= Data
   y 			= unlist(unname(bdd[varnames[1]]))
   effetsfix 	= varnames[-c(1, length(varnames)-1, length(varnames))]
-  matfix 		= as.matrix(unname(cbind(rep(1, dim(bdd)[1]), bdd[effetsfix])))
+  matfix 		  = unname(cbind(rep(1, dim(bdd)[1]), bdd[effetsfix]))
+  
+  if(length(var.inter) > 0){
+    for (j in length(var.inter)){
+      matfix  = unname(cbind(matfix,bdd[var.inter[[j]][1]]*bdd[var.inter[[j]][2]]))
+    }
+  }
+  
+  matfix 	  	= as.matrix(matfix)
   bdd$id 		= model$lmeData$grp
   n 			= nrow(bdd)
   
