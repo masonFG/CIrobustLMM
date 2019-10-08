@@ -15,7 +15,7 @@ library(robustlmm) # version 2.3
 library(heavy) # version 0.38.19
 library(lme4) # version 1.1-20
 library(doParallel) # version 1.0.14
-source("confintLMM.R")
+source("confintLMM.R") # function to produce confidence intervals
 
 # 3) Import balanced dataset and define time and participant variable
 sleepstudy
@@ -73,7 +73,7 @@ model.ML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy, REML = 
 model.REML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy)
 
 # 5) Confidence Intervals
-confint.LMM(model = model.ML, Data = Dataset, id = participant, Time = time, method = "wild", B = 999, level = .95)
+confint.LMM(model = model.ML, Data = Dataset, id = participant, Time = time, method = "parametric", B = 999, level = .95)
 
 # ARGUMENTS
 # model: an object of class varComprob (or varComprob.fit or varComprob.S), lmerMod, rlmerMod or heavyLme
