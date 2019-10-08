@@ -13,25 +13,10 @@ parametric_S <- function(model, Time, B, level){
     P 	= 1
   }
   
-  #interaction
-  inter = grep(pattern = ":" , names(model$fixef), value = TRUE, fixed = TRUE)
-  
-  if(!is.null(inter)){
-    var.inter = strsplit(inter, split = ":" , fixed = TRUE)
-  }
-  
   my.DATA 	  = model$model
   myvar 	    = all.vars(model$terms)
   n_obs 	    = model$nobs
-  matfix 	    = matrix(model$X, n_obs, length(model$K)-1) 
-  
-  if(length(var.inter) > 0){
-    for (j in length(var.inter)){
-      matfix  = unname(cbind(matfix,bdd[var.inter[[j]][1]]*bdd[var.inter[[j]][2]]))
-    }
-  }
-  
-  matfix 	    = as.matrix(matfix)
+  matfix 	    = as.matrix(matrix(model$X, n_obs, length(model$fixef))) 
   
   if(length(model$K) > 1){
     Zmatrix 				    = matrix(c(rep(1, n_obs), Time), nrow = n_obs, ncol = 2)
@@ -47,7 +32,7 @@ parametric_S <- function(model, Time, B, level){
     Zmatrix 				    = matrix(c(rep(1, n_obs)), nrow = n_obs, ncol = 1)
   }
   
-  bet 		            = unname(model$fixef)
+  bet 		            = unname(c(model$fixef))
   result 	            = NULL
   resultr 	          = NULL
   

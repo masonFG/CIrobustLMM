@@ -21,7 +21,7 @@ wild_lmerML <- function(model, B, level){
   
   bdd 			  = model@frame
   y 			    = model@resp$y
-  effetsfix 	= names(fixef(model))[-1] 
+  effetsfix 	= attr(attr(model@frame,"terms"),"varnames.fixed")[-1]
   matfix 		  = unname(cbind(rep(1,dim(bdd)[1]),bdd[effetsfix]))
   
   if(length(var.inter)>0){
