@@ -5,8 +5,8 @@
 # Comment: R code for analyses presented in titres-du-papier - this script contains the sleepstudy example and can be adapted to your own balanced dataset
 # ---------------------------------------------------------------------
 
-# 1) Set working directory (modify the path and select the folder "CIfunctions")
-setwd(".../CIfunctions")
+# 1) Set working directory (select the folder "CIfunctions")
+setwd("..../CIfunctions")
 
 # 2) Load the packages
 library(MASS) # version 7.3-51.1
@@ -15,7 +15,7 @@ library(robustlmm) # version 2.3
 library(heavy) # version 0.38.19
 library(lme4) # version 1.1-20
 library(doParallel) # version 1.0.14
-source("confintLMM.R") # function to produce confidence intervals
+source("confintLMM.R")
 
 # 3) Import balanced dataset and define time and participant variable
 sleepstudy
@@ -73,7 +73,7 @@ model.ML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy, REML = 
 model.REML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy)
 
 # 5) Confidence Intervals
-confint.LMM(model = model.ML, Data = Dataset, id = participant, Time = time, method = "parametric", B = 999, level = .95)
+confint.LMM(model = model.ML, Data = Dataset, id = participant, Time = time, method = "wild", B = 999, level = .95)
 
 # ARGUMENTS
 # model: an object of class varComprob (or varComprob.fit or varComprob.S), lmerMod, rlmerMod or heavyLme
@@ -81,7 +81,7 @@ confint.LMM(model = model.ML, Data = Dataset, id = participant, Time = time, met
 # id: The grouping variable vector
 # Time: the time variable vector
 # method: "parametric" for classical Normal-parametric bootstrap percentile CI, "t-parametric" for Student-parametric bootstrap percentile CI (available with object of class heavyLme),
-# "wild" for the wild  bootstrap percentile CI and "Wald" for Wald-z CI.
+# "wild" for the wild  bootstrap percentile CI and "Wald" for z-Wald CI.
 # B: number of bootstrap samples, positive integer (with "parametric", "t-parametric" or "wild")
 # level: confidence level < 1
 
