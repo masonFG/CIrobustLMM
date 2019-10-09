@@ -26,6 +26,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
       inf = c(model$beta - summ$zTable[,2]*qnorm(level+alpha/2),model$eta - sqrt(diag(model$vcov.eta))*qnorm(level+alpha/2))
       sup = c(model$beta + summ$zTable[,2]*qnorm(level+alpha/2),model$eta + sqrt(diag(model$vcov.eta))*qnorm(level+alpha/2))
       result = cbind(inf,sup)
+      colnames(result) = c("lower bound", "upper bound")
       return(result)
     }else{
       print("Error! Probably an incorrect value for method argument")
@@ -50,6 +51,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
       inf = c(model$beta - summ$zTable[,2]*qnorm(level+alpha/2),model$eta - sqrt(diag(model$vcov.eta))*qnorm(level+alpha/2))
       sup = c(model$beta + summ$zTable[,2]*qnorm(level+alpha/2),model$eta + sqrt(diag(model$vcov.eta))*qnorm(level+alpha/2))
       result = cbind(inf,sup)
+      colnames(result) = c("lower bound", "upper bound")
       return(result)
     }else{
       print("Error! Probably an incorrect value for method argument")
@@ -87,6 +89,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
         inf = c(fixef(model) - summ$coefficients[,2]*qnorm(level+alpha/2))
         sup = c(fixef(model) + summ$coefficients[,2]*qnorm(level+alpha/2))
         result = cbind(inf,sup)
+        colnames(result) = c("lower bound", "upper bound")
         return(result)
     }else{
       print("Error! Probably an incorrect value for method argument")
@@ -112,6 +115,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
       inf = c(fixef(model) - summ$coefficients[,2]*qnorm(level+alpha/2))
       sup = c(fixef(model) + summ$coefficients[,2]*qnorm(level+alpha/2))
       result = cbind(inf,sup)
+      colnames(result) = c("lower bound", "upper bound")
       return(result)
     }else{
         print("Error! Probably an incorrect value for method argument")
@@ -142,6 +146,7 @@ confint.LMM <- function(model, Data, id, Time, method, B, level){
       inf = c(coefficients(model) - summ$coefficients[,2]*qnorm(level+alpha/2))
       sup = c(coefficients(model) + summ$coefficients[,2]*qnorm(level+alpha/2))
       result = cbind(inf,sup)
+      colnames(result) = c("lower bound", "upper bound")
       return(result)
     }else{
       print("Error! Probably an incorrect value for method argument")
