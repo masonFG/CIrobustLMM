@@ -82,7 +82,7 @@ confint.LMM(model = model.ML, Data = Dataset, id = participant, Time = time, met
 # Time: the time variable vector
 # method: "parametric" for classical Normal-parametric bootstrap percentile CI, "t-parametric" for Student-parametric bootstrap percentile CI (available with object of class heavyLme),
 # "wild" for the wild  bootstrap percentile CI and "Wald" for z-Wald CI.
-# B: number of bootstrap samples, positive integer (with "parametric", "t-parametric" or "wild")
+# B: number of bootstrap samples, positive integer (with "parametric", "t-parametric" or "wild") > 1
 # level: confidence level < 1
 
 # VALUE
