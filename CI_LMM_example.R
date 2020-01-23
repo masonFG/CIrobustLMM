@@ -2,8 +2,11 @@
 # Author: Fabio Mason
 # Date: September, 2019
 # R version: 3.5.1
-# Comment: R code for analyses presented in titres-du-papier - this script contains the sleepstudy example and can be adapted to your own balanced dataset
-# From Mason, F., Cantoni, E., & Ghisletta, P. (submitted). Robust estimation and confidence intervals in linear mixed models.
+#  R code for analyses presented in
+
+#Mason, F., Cantoni, E., & Ghisletta, P. (submitted). Robust estimation and confidence intervals in linear mixed models.
+
+#This script contains the code to reproduce the sleepstudy example and can be adapted to your own balanced dataset.
 # ---------------------------------------------------------------------
 
 ###############
