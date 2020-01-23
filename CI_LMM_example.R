@@ -59,7 +59,7 @@ model.formula = Reaction ~ 1 + Days
 model.S = varComprob(model.formula, groups = groups, data = sleepstudy, varcov = K, control = varComprob.control(lower = c(0,0,-Inf), method = "S", psi = "rocke")) 
 
 # Estimation with composite-TAU estimator
-model.cTAU = varComprob(model.formula, groups = groups,data = sleepstudy, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf))) 
+model.cTAU = varComprob(model.formula, groups = groups, data = sleepstudy, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf))) 
 
 # 4b) Estimation with rlmer() (see corresponding helpfile for more details)
 
