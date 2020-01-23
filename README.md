@@ -19,27 +19,27 @@ References
 Agostinelli, C., & Yohai, V. J. (2016). Composite robust estimators for linear mixed
 models. Journal of the American Statistical Association, 111 (516), 1764–1774.
 
-Bates, D. e. a. (2014). lme4: Linear mixed-effects models using eigen and s4. R package
-version, 1 (7), 1–23.
+Bates, D., Mächler, M., Bolker, B., & Walker, S. (2015). Fitting linear mixed-effects models
+using lme4. Journal of Statistical Software, 67 (1), 1–48. doi: 10.18637/jss.v067.i01
 
 Copt, S., & Victoria-Feser, M.-P. (2006). High-breakdown inference for mixed linear
 models. Journal of the American Statistical Association, 101 (473), 292–300.
 
-Koller, M. (2013). Robust estimation of linear mixed models (Doctoral dissertation, ETH
+Koller, M. (2013). Robust estimation of linear mixed models (Doctoral dissertation, Eidgenössische Technische Hochschule
 Zurich). doi: 10.3929/ethz-a-007632241
 
 Koller, M. (2016). robustlmm: An r package for robust estimation of linear mixed-effects
-models. Journal of Statistical Software, 75 (6). Retrieved from
-http://www.jstatsoft.org/v75/i06/ doi: 10.18637/jss.v075.i06
+models. Journal of Statistical Software, 75 (6). doi: 10.18637/jss.v075.i06
 
-Modugno, L., & Giannerini, S. (2013, Nov). The wild bootstrap for multilevel models.
+Modugno, L., & Giannerini, S. (2013). The wild bootstrap for multilevel models.
 Communications in Statistics - Theory and Methods, 44 (22), 4812–4825. doi:
 10.1080/03610926.2013.802807
 
-Osorio, F. (2016). heavy: Robust estimation using heavy-tailed distributions. R package
-version 0.38. ed.
+Osorio, & F. (2019). heavy: Robust estimation using heavy-tailed distributions [Computer
+software manual]. Retrieved from https://CRAN.R-project.org/package=heavy
+(R package version 0.38.196)
 
-Pinheiro, J. C., Liu, C., & Wu, Y. N. (2001, Jun). Efficient algorithms for robust
+Pinheiro, J. C., Liu, C., & Wu, Y. N. (2001). Efficient algorithms for robust
 estimation in linear mixed-effects models using the multivariate t distribution.
 Journal of Computational and Graphical Statistics, 10 (2), 249–276. doi:
 10.1198/10618600152628059
