@@ -3,7 +3,11 @@
 # Date: September, 2019
 # R version: 3.5.1
 # Comment: R code for analyses presented in titres-du-papier - this script contains the sleepstudy example and can be adapted to your own balanced dataset
+# From Mason, F., Cantoni, R., & Ghisletta, P. (submitted). Robust estimation and confidence intervals in linear mixed models.
 # ---------------------------------------------------------------------
+
+###############
+# preliminary setup
 
 # 1) Set working directory (select the folder "CIfunctions")
 setwd("..../CIfunctions")
@@ -17,7 +21,7 @@ library(lme4) # version 1.1-20
 library(doParallel) # version 1.0.14
 source("confintLMM.R") # function to produce confidence intervals
 
-# 3) Import balanced dataset and define time and participant variable
+# 3) Import balanced dataset
 sleepstudy
 
 # Identify dataset, time and participant variables
@@ -25,16 +29,19 @@ Dataset = sleepstudy
 time = sleepstudy$Days
 participant = sleepstudy$Subject
 
+###############
+# LMM estimations
+
 # 4a) Estimation with varComprob() (see corresponding helpfile for more details)
 
 # Build the argument "groups" of the varComprob() function
 n = length(unique(participant)) # the number of participants
-J = length(unique(time)) # the number of observations per participant
+J = length(unique(time)) # the number of repeated observations per participant
 groups = cbind(rep(1:J, each=n),rep((1:n), J)) # a numeric matrix with two columns used to group the observations according to participant.
 
 # Build the argument "varcov" of the varComprob() function
-z1 = rep(1, J) #VALUE for intercept (=1) for the J observations by clusters
-z2 = unique(time) # VALUE for the time variable
+z1 = rep(1, J) #Value for intercept (=1) for the J observations by clusters
+z2 = unique(time) # Value for the time variable
 
 K = list() # the "varcov" object
 K[[1]] = tcrossprod(z1,z1) # Matrix for intercept
@@ -46,10 +53,10 @@ names(K) = c("sigma2_Intercept", "sigma2_Time", "Covariance")
 model.formula = Reaction ~ 1 + Days
 
 # Estimation with S-estimator
-model.S = varComprob(model.formula, groups = groups, data = sleepstudy, varcov = K, control = varComprob.control(lower = c(0,0,-Inf), method = "S", psi = "rocke")) # Estimation with the classic S-estimator
+model.S = varComprob(model.formula, groups = groups, data = sleepstudy, varcov = K, control = varComprob.control(lower = c(0,0,-Inf), method = "S", psi = "rocke")) 
 
 # Estimation with composite-TAU estimator
-model.cTAU = varComprob(model.formula, groups = groups,data = sleepstudy, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf))) # Estimation with the composite TAU-estimator
+model.cTAU = varComprob(model.formula, groups = groups,data = sleepstudy, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf))) 
 
 # 4b) Estimation with rlmer() (see corresponding helpfile for more details)
 
@@ -72,6 +79,9 @@ model.ML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy, REML = 
 # Estimation with REML 
 model.REML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy)
 
+###############
+# Confidence interval estimations
+
 # 5) Confidence Intervals
 confint.LMM(model = model.ML, Data = Dataset, id = participant, Time = time, method = "parametric", B = 999, level = .95)
 
@@ -86,4 +96,4 @@ confint.LMM(model = model.ML, Data = Dataset, id = participant, Time = time, met
 # level: confidence level < 1
 
 # VALUE
-# A matrix with columns giving estimate, lower and upper confidence limits for each parameter.
+# A matrix holding columns for point estimates and, lower and upper boudaries confidence intervals for each parameter.
