@@ -9,6 +9,7 @@ The main function is confint.lmm().
 The file "CI_LMM_example.R" contains an example of its application on the sleepstudy data. It includes estimation with lmer() for methods ML and REML (e.g. Bates, 2014), rlmer() with options "DAStau" and "DASvar" (e.g. Koller, 2016) and varComprob() for methods S and composite-tau (see Agostinelli & Yohai, 2016). Users can adapt this document to their own dataset.
 The folder CIfunctions contains the auxiliary functions files, which must be downloaded and sourced before using the function confint.lmm().  More specifically, the file "confintLMM.R" contains the function confint.lmm(), which calls others functions contained in the folder (the files called by the prefix "CIfunctions_") depending on which estimation method is selected and which type of confidence interval is chosen.
 
+The folder "sleepstudySimulationGitHub" contains all documents to replicate the simulation in Parametric and Semi-Parametric Bootstrap Based Confidence Intervals for Robust Linear Mixed Models (in submission).
 
 
   
