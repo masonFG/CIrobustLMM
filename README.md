@@ -1,12 +1,12 @@
 CIrobustLMM
 
-Contains a set of R functions and scripts to compute percentile confidence intervals based on bootstrap schemes or with Wald-z, for linear mixed models estimated with both classical and robust methods. The scripts allow for balanced longitudinal data designs. Two bootstrap schemes are implemented: the wild bootstrap and the parametric bootstrap. Both are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp), heavyLme (from package heavy) and rlmerMod (from package robustlmm). A fully worked out example of longitudinal linear mixed model on the sleepstudy data is provided.
+Contains a set of R functions and scripts to compute percentile confidence intervals based on bootstrap schemes or with Wald-z, for linear mixed models estimated with both classical and robust methods. The scripts allow for balanced longitudinal data designs. Two bootstrap schemes are implemented: the wild bootstrap and the parametric bootstrap. Both are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp) and rlmerMod (from package robustlmm). A fully worked out example of longitudinal linear mixed model on the sleepstudy data is provided.
 
 Contents
 
 The main function is confint.lmm(). 
 
-The file "CI_LMM_example.R" contains an example of its application on the sleepstudy data. It includes estimation with lmer() for methods ML and REML (e.g. Bates, 2014), rlmer() with options "DAStau" and "DASvar" (e.g. Koller, 2016), varComprob() for methods S and composite-tau (see Agostinelli & Yohai, 2016) and heavyLme() with the multivariate t-ML method (Pinheiro et al., 2001). Users can adapt this document to their own dataset.
+The file "CI_LMM_example.R" contains an example of its application on the sleepstudy data. It includes estimation with lmer() for methods ML and REML (e.g. Bates, 2014), rlmer() with options "DAStau" and "DASvar" (e.g. Koller, 2016) and varComprob() for methods S and composite-tau (see Agostinelli & Yohai, 2016). Users can adapt this document to their own dataset.
 The folder CIfunctions contains the auxiliary functions files, which must be downloaded and sourced before using the function confint.lmm().  More specifically, the file "confintLMM.R" contains the function confint.lmm(), which calls others functions contained in the folder (the files called by the prefix "CIfunctions_") depending on which estimation method is selected and which type of confidence interval is chosen.
 
 
@@ -35,13 +35,6 @@ Modugno, L., & Giannerini, S. (2013). The wild bootstrap for multilevel models.
 Communications in Statistics - Theory and Methods, 44 (22), 4812–4825. doi:
 10.1080/03610926.2013.802807
 
-Osorio, & F. (2019). heavy: Robust estimation using heavy-tailed distributions [Computer
-software manual]. Retrieved from https://CRAN.R-project.org/package=heavy
-(R package version 0.38.196)
 
-Pinheiro, J. C., Liu, C., & Wu, Y. N. (2001). Efficient algorithms for robust
-estimation in linear mixed-effects models using the multivariate t distribution.
-Journal of Computational and Graphical Statistics, 10 (2), 249–276. doi:
-10.1198/10618600152628059
   
 
