@@ -105,7 +105,7 @@ wild_varComp <- function(model, id, Time, B, level){
       my.DATA$id    = id
       my.DATA$yboot = yboot
       formulrest 		= as.character(formula(model))[3]
-      formulboot 		= paste("yboot ~", formulrest,"+(temps|id)")
+      formulboot 		= paste("yboot ~", formulrest,"+(time|id)")
       model.bootr 		= lmer(formulboot, data = my.DATA)
       
       if(length(model.bootr@optinfo$conv$lme4$messages) == 0){OK = TRUE}
