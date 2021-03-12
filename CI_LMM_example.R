@@ -69,7 +69,7 @@ model.SMDM = rlmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy, rho.
 # Estimation with SMDMvar
 model.SMDMvar = rlmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy, method = "DASvar", rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
 
-# 4e) Estimation with lmer() (see corresponding helpfile for more details)
+# 4c) Estimation with lmer() (see corresponding helpfile for more details)
 
 # Estimation with ML
 model.ML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy, REML = F)
