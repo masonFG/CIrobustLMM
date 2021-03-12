@@ -94,4 +94,4 @@ confint.LMM(model = model.S, Data = Dataset, id = participant, Time = time, meth
 # level: confidence level < 1
 
 # VALUE
-# A matrix holding columns for point estimates and, lower and upper boudaries confidence intervals for each parameter.
+# A matrix holding columns for lower and upper boudaries confidence intervals for each parameter.
