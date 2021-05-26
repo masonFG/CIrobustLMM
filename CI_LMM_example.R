@@ -4,7 +4,7 @@
 # R version: 3.5.1
 #  R code for analyses presented in
 
-#Mason, F., Cantoni, E., & Ghisletta, P. (submitted). Robust estimation and confidence intervals in linear mixed models.
+#Mason, F., Cantoni, E., & Ghisletta, P. (submitted). Parametric and Semi-Parametric Bootstrap Based Confidence Intervals for Robust Linear Mixed Models.
 
 #This script contains the code to reproduce the sleepstudy example and can be adapted to your own balanced dataset.
 # ---------------------------------------------------------------------
