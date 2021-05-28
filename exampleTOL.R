@@ -1,0 +1,111 @@
+# ---------------------------------------------------------------------
+# Author: Fabio Mason
+# Date: August, 2020
+# R version: 3.6.0
+#  R code for analyses presented in
+
+#Mason, F., Cantoni, E., & Ghisletta, P. (submitted). Robust estimation and confidence intervals in linear mixed models.
+
+#This script contains the code to reproduce the sleepstudy example and can be adapted to your own balanced dataset.
+# ---------------------------------------------------------------------
+
+###############
+# preliminary setup
+
+# 1) Set working directory (select the folder "CIfunctions")
+#setwd("..../CIfunctions")
+
+# 2) Load the packages
+library(MASS) # version 7.3-51.1
+library(robustvarComp) # version 0.1-2
+library(robustlmm) # version 2.3
+library(heavy) # version 0.38.19
+library(lme4) # version 1.1-20
+library(lmerTest) # version 3.1-2
+library(doParallel) # version 1.0.14
+library(stringr)  # version 1.4.0
+library(inferLMM)
+
+bdd <- read.csv("H:/These/CIrobustLMM_suite/ToleranceGIT/Dataset.txt")
+
+
+# Identify dataset, time and participant variables
+Dataset = bdd
+time = bdd$time
+participant = bdd$id
+
+###############
+# LMM estimations
+
+# 4a) Estimation with varComprob() (see corresponding helpfile for more details)
+
+# Build the argument "groups" of the varComprob() function
+n = length(unique(participant)) # the number of participants
+J = length(unique(time)) # the number of repeated observations per participant
+groups = cbind(rep(1:J, each=n),rep((1:n), J)) # a numeric matrix with two columns used to group the observations according to participant.
+
+# Build the argument "varcov" of the varComprob() function
+z1 = rep(1, J) #Value for intercept (=1) for the J observations by clusters
+z2 = unique(time) # Value for the time variable
+
+K = list() # the "varcov" object
+K[[1]] = tcrossprod(z1,z1) # Matrix for intercept
+K[[2]] = tcrossprod(z2,z2) # Matrix for time variable
+K[[3]] = tcrossprod(z1,z2) + tcrossprod(z2,z1) # Matrix of interaction Intercept by time variable
+names(K) = c("sigma2_Intercept", "sigma2_Time", "Covariance")
+
+# Define the formula of the two nested models
+model.formula = y ~ 1 + group*time
+model.formula0 = y ~ 1 + group+time
+
+# Estimation with S-estimator
+model.S  = varComprob(model.formula, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0,0,-Inf), method = "S", psi = "rocke"))
+model.S0 = varComprob(model.formula0, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0,0,-Inf), method = "S", psi = "rocke"))
+
+
+wildS <- TestFixef(model = model.S, model0 = model.S0, Data = Dataset, id = participant, Time = time, method = "wild", B = 999, level = .95)
+wildS$p_value
+
+paramS <- TestFixef(model = model.S, model0 = model.S0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 3, level = .95)
+paramS$p_value
+
+# Estimation with composite-TAU estimator
+model.cTAU  = varComprob(model.formula, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf)))
+model.cTAU0 = varComprob(model.formula0, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf)))
+
+
+
+wildcTAU <- TestFixef(model = model.cTAU, model0 = model.cTAU0, Data = Dataset, id = participant, Time = time, method = "wild", B = 9, level = .95)
+wildcTAU$p_value
+
+paramcTAU <- TestFixef(model = model.cTAU, model0 = model.cTAU0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 9, level = .95)
+paramcTAU$p_value
+
+# 4b) Estimation with rlmer() (see corresponding helpfile for more details)
+
+# Estimation with SMDM
+model.SMDM = rlmer(y ~ 1 + group*time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
+model.SMDM0 = rlmer(y ~ 1 + group + time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
+
+wildSMDM <- TestFixef(model = model.SMDM, model0 = model.SMDM0, Data = Dataset, id = participant, Time = time, method = "wild", B = 9, level = .95)
+wildSMDM$p_value
+
+paramSMDM <- TestFixef(model = model.SMDM, model0 = model.SMDM0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 9, level = .95)
+paramSMDM$p_value
+
+
+
+# 4c) Estimation with lmer() (see corresponding helpfile for more details)
+
+# Estimation with ML
+model.ML = lmer(y ~ 1 + group*time + (time|id), data = Dataset, REML = F)
+model.ML0 = lmer(y ~ 1 + group + time + (time|id), data = Dataset, REML = F)
+
+
+
+wildML <- TestFixef(model = model.ML, model0 = model.ML0, Data = Dataset, id = participant, Time = time, method = "wild", B = 9, level = .95)
+wildML$p_value
+
+paramML <- TestFixef(model = model.ML, model0 = model.ML0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 9, level = .95)
+paramML$p_value
+
