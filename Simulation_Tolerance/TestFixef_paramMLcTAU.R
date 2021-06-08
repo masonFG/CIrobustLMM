@@ -16,7 +16,7 @@ parametric_cTAU <- function(model, model0, id, Time, B, level){
   
   my.DATA 	  = model$model
   n_obs 	    = model$nobs
-  index_fixef = which(names(model$fixef)!=names(model0$fixef))
+  index_fixef = which(colnames(model$fixef)!=colnames(model0$fixef))
   matfix 	    = as.matrix(matrix(model$X, n_obs, length(model$fixef))) 
   matfixSMALL = as.matrix(matrix(model0$X, n_obs, length(model0$fixef)))
   b_tested    = model$fixef[index_fixef]
@@ -97,12 +97,11 @@ parametric_cTAU <- function(model, model0, id, Time, B, level){
   
   estim                 = resultr
   colnames(estim)       = c(names(model$fixef), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
-  effet 				        = estim[,index_fixef]
-  
+  effet 				        = abs(estim[,index_fixef])  
   if(length(index_fixef)>1){
-  p_val      			      = colSums(effet > b_tested)/B
+    p_val      			      = colSums(effet > abs(b_tested))/B
   }else{
-    p_val      			      = sum(effet > b_tested)/B
+    p_val      			      = sum(effet > abs(b_tested))/B
     colnames(p_val)       = names(bet)[index_fixef] 
   }
   

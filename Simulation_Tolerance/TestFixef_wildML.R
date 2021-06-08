@@ -100,12 +100,12 @@ wild_lmer <- function(model, model0, B, level){
   
   estim                 = resultr
   colnames(estim)       = c(names(fixef(model)), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
-  effet 				        = estim[,index_fixef]
+  effet 				        = abs(estim[,index_fixef])
   
   if(length(index_fixef)>1){
-    p_val      			      = colSums(effet > b_tested)/B
+    p_val      			      = colSums(effet > abs(b_tested))/B
   }else{
-    p_val      			      = sum(effet > b_tested)/B
+    p_val      			      = sum(effet > abs(b_tested))/B
     colnames(p_val)       = names(bet)[index_fixef] 
   }
   
