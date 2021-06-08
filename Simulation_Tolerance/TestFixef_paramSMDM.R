@@ -107,7 +107,13 @@ param_lmer <- function(model, model0, B, level){
   
   
   estim                 = resultr
+  if(length(model@theta) > 1){
   colnames(estim)       = c(names(fixef(model)), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
+  }else{
+    colnames(estim)       = c(names(fixef(model)), "sigma2", "sigma2_intercept")
+    
+  }
+
   effet 				        = abs(estim[,index_fixef])  
   
    if(length(index_fixef)>1){
