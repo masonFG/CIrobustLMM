@@ -95,9 +95,16 @@ parametric_S <- function(model, model0, id, Time, B, level){
   }
   
   
-  estim                 = resultr
-  colnames(estim)       = c(names(model$fixef), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
-  effet 				        = abs(estim[,index_fixef])  
+ estim                 = resultr
+  if(length(model$K) > 1){
+    colnames(estim)       = c(names(fixef(model)), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
+  }else{
+    colnames(estim)       = c(names(fixef(model)), "sigma2", "sigma2_intercept")
+
+  }
+
+  effet 				        = abs(estim[,index_fixef])
+  
   if(length(index_fixef)>1){
     p_val      			      = colSums(effet > abs(b_tested))/B
   }else{
