@@ -114,9 +114,9 @@ wild_REMLvarComp <- function(model, model0, id, Time, B, level){
 
  estim                 = resultr
   if(length(model$K) > 1){
-    colnames(estim)       = c(names(fixef(model)), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
+    colnames(estim)       = c(names(model$fixef), "sigma2", "sigma2_intercept", "sigma2_time", "covariance")
   }else{
-    colnames(estim)       = c(names(fixef(model)), "sigma2", "sigma2_intercept")
+    colnames(estim)       = c(names(model$fixef), "sigma2", "sigma2_intercept")
 
   }
 
