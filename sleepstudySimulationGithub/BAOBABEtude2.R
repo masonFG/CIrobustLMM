@@ -298,47 +298,47 @@ names(SUMMARY)<-c("model","CIparam")
 }
 # 4b) Estimation with rlmer() (see corresponding helpfile for more details)
 
-# Estimation with SMDM
-if(estimator == "SMDM"){
-model.SMDM = rlmer(y ~ 1 +  time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
+# Estimation with DAS
+if(estimator == "DAS"){
+model.DAS = rlmer(y ~ 1 +  time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
 
 if(bootstrap == "wild"){
   if(test == TRUE){
-model.SMDM0 = rlmer(y ~ 1 + time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
+model.DAS0 = rlmer(y ~ 1 + time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
 
-summ=summary(model.SMDM)
-fixedEffects_SMDM <- fixef(model.SMDM)
-randomEffects_SMDM <- c(VarCorr(model.SMDM)$id[1,1], VarCorr(model.SMDM)$id[2,2],VarCorr(model.SMDM)$id[2,1])
-sigma2_SMDM <- sigma(model.SMDM)^2
-estimates <- c(fixedEffects_SMDM,sigma2_SMDM,randomEffects_SMDM)
+summ=summary(model.DAS)
+fixedEffects_DAS <- fixef(model.DAS)
+randomEffects_DAS <- c(VarCorr(model.DAS)$id[1,1], VarCorr(model.DAS)$id[2,2],VarCorr(model.DAS)$id[2,1])
+sigma2_DAS <- sigma(model.DAS)^2
+estimates <- c(fixedEffects_DAS,sigma2_DAS,randomEffects_DAS)
 
-inf = c(fixef(model.SMDM) - summ$coefficients[,2]*qnorm(.95+.05/2))
-sup = c(fixef(model.SMDM) + summ$coefficients[,2]*qnorm(.95+.05/2))
-TestWaldns_SMDM = inf < 0 & 0 < sup
-TestWaldns_SMDM = c(TestWaldns_SMDM,NA,NA,NA,NA)
+inf = c(fixef(model.DAS) - summ$coefficients[,2]*qnorm(.95+.05/2))
+sup = c(fixef(model.DAS) + summ$coefficients[,2]*qnorm(.95+.05/2))
+TestWaldns_DAS = inf < 0 & 0 < sup
+TestWaldns_DAS = c(TestWaldns_DAS,NA,NA,NA,NA)
 
-wildSMDM <- TestFixef(model = model.SMDM, model0 = model.SMDM0, Data = Dataset, id = participant, Time = time, method = "wild", B = 5000, level = .95)
-SUMMARY <- list(model.SMDM,model.SMDM0,estimates,cbind(inf,sup),TestWaldns_SMDM,wildSMDM)
+wildDAS <- TestFixef(model = model.DAS, model0 = model.DAS0, Data = Dataset, id = participant, Time = time, method = "wild", B = 5000, level = .95)
+SUMMARY <- list(model.DAS,model.DAS0,estimates,cbind(inf,sup),TestWaldns_DAS,wildDAS)
 names(SUMMARY)<-c("model","model0","estimates","CIWald","pWaldFixed","pWILD_interaction")
 }else{
-CIwildSMDM <- BCaboot(model = model.SMDM, data = Dataset, clusterid = participant, methodCI = "wild", Time = time, B = 5000, confint.level = .95)
-SUMMARY <- list(model.SMDM,CIwildSMDM)
+CIwildDAS <- BCaboot(model = model.DAS, data = Dataset, clusterid = participant, methodCI = "wild", Time = time, B = 5000, confint.level = .95)
+SUMMARY <- list(model.SMDM,CIwildDAS)
 names(SUMMARY)<-c("model","CIwild")
-#Testwildns_SMDM = wildSMDM[,1] < 0 & 0 < wildSMDM[,2]
+#Testwildns_DAS = wildDAS[,1] < 0 & 0 < wildDAS[,2]
 }
 }
 
 if(bootstrap == "parametric"){
   if(test == TRUE){
-    model.SMDM0 = rlmer(y ~ 1 + time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
-    paramSMDM <- TestFixef(model = model.SMDM, model0 = model.SMDM0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 5000, level = .95)
-    SUMMARY <- list(model.SMDM,model.SMDM0,paramSMDM) 
+    model.DAS0 = rlmer(y ~ 1 + time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
+    paramDAS<- TestFixef(model = model.DAS, model0 = model.DAS0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 5000, level = .95)
+    SUMMARY <- list(model.DAS,model.DAS0,paramDAS) 
     names(SUMMARY)<-c("model","model0","pPARAM_interaction")
 }else{
-CIparamSMDM <- BCaboot(model = model.SMDM, data = Dataset, clusterid = participant, methodCI = "parametric", Time = time, B = 5000, confint.level = .95)
-SUMMARY <- list(model.SMDM,CIparamSMDM)  
+CIparamDAS <- BCaboot(model = model.DAS, data = Dataset, clusterid = participant, methodCI = "parametric", Time = time, B = 5000, confint.level = .95)
+SUMMARY <- list(model.DAS,CIparamDAS)  
 names(SUMMARY)<-c("model","CIparam")
-#Testparamns_SMDM = paramcSMDM[,1] < 0 & 0 < paramcSMDM[,2]
+#Testparamns_DAS = paramcDAS[,1] < 0 & 0 < paramcDAS[,2]
 }
 }
 }
