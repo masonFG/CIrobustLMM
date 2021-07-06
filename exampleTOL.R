@@ -83,15 +83,15 @@ paramcTAU$p_value
 
 # 4b) Estimation with rlmer() (see corresponding helpfile for more details)
 
-# Estimation with SMDM
-model.SMDM = rlmer(y ~ 1 + group*time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
-model.SMDM0 = rlmer(y ~ 1 + group + time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
+# Estimation with DAStau
+model.DAStau = rlmer(y ~ 1 + group*time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
+model.DAStau0 = rlmer(y ~ 1 + group + time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
 
-wildSMDM <- TestFixef(model = model.SMDM, model0 = model.SMDM0, Data = Dataset, id = participant, Time = time, method = "wild", B = 9, level = .95)
-wildSMDM$p_value
+wildDAStau <- TestFixef(model = model.DAStau, model0 = model.DAStau0, Data = Dataset, id = participant, Time = time, method = "wild", B = 9, level = .95)
+wildDAStau$p_value
 
-paramSMDM <- TestFixef(model = model.SMDM, model0 = model.SMDM0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 9, level = .95)
-paramSMDM$p_value
+paramDAStau <- TestFixef(model = model.DAStau, model0 = model.DAStau0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 9, level = .95)
+paramDAStau$p_value
 
 
 
