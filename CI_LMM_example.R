@@ -66,7 +66,7 @@ model.cTAU = varComprob(model.formula, groups = groups, data = sleepstudy, varco
 # Estimation with DAStau
 model.DAStau = rlmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
 
-# Estimation with SMDMvar
+# Estimation with DASvar
 model.DASar = rlmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy, method = "DASvar", rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
 
 # 4c) Estimation with lmer() (see corresponding helpfile for more details)
