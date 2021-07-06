@@ -322,7 +322,7 @@ SUMMARY <- list(model.DAS,model.DAS0,estimates,cbind(inf,sup),TestWaldns_DAS,wil
 names(SUMMARY)<-c("model","model0","estimates","CIWald","pWaldFixed","pWILD_interaction")
 }else{
 CIwildDAS <- BCaboot(model = model.DAS, data = Dataset, clusterid = participant, methodCI = "wild", Time = time, B = 5000, confint.level = .95)
-SUMMARY <- list(model.SMDM,CIwildDAS)
+SUMMARY <- list(model.DAS,CIwildDAS)
 names(SUMMARY)<-c("model","CIwild")
 #Testwildns_DAS = wildDAS[,1] < 0 & 0 < wildDAS[,2]
 }
