@@ -16,7 +16,7 @@
 #setwd("..../CIfunctions")
  ML = "ML"
  tML = "tML"
- SMDM = "SMDM"
+ DAS = "DAS"
  S = "S"
  cTAU = "cTAU"
  parametric = "parametric"
