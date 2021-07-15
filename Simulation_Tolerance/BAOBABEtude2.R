@@ -444,9 +444,9 @@ estimates <- c(fixedEffects_DAStau,sigma2_DAStau,randomEffects_DAStau)
 inf = c(fixef(model.DAStau) - summ$coefficients[,2]*qnorm(.95+.05/2))
 sup = c(fixef(model.DAStau) + summ$coefficients[,2]*qnorm(.95+.05/2))
 TestWaldns_DAStau = inf < 0 & 0 < sup
-TestWaldns_DAStau = c(TestWaldns_SMDM,NA,NA,NA,NA)
+TestWaldns_DAStau = c(TestWaldns_DAStau,NA,NA,NA,NA)
 
-wildSMDM <- TestFixef(model = model.DAStau, model0 = model.DAStau0, Data = Dataset, id = participant, Time = time, method = "wild", B = 5000, level = .95)
+wildDAStau <- TestFixef(model = model.DAStau, model0 = model.DAStau0, Data = Dataset, id = participant, Time = time, method = "wild", B = 5000, level = .95)
 SUMMARY <- list(model.DAStau,model.DAStau0,estimates,cbind(inf,sup),TestWaldns_DAStau,wildDAStau)
 names(SUMMARY)<-c("model","model0","estimates","CIWald","pWaldFixed","pWILD_interaction")
 }else{
