@@ -392,25 +392,25 @@ paramcTAU <- TestFixef(model = model.cTAU, model0 = model.cTAU0, Data = Dataset,
 
 # 4b) Estimation with rlmer() (see corresponding helpfile for more details)
 
-# Estimation with SMDM
-model.SMDM = rlmer(y ~ 1 + group*temps + (temps|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
-model.SMDM0 = rlmer(y ~ 1 + group + temps + (temps|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
-summ=summary(model.SMDM)
-fixedEffects_SMDM <- fixef(model.SMDM)
-randomEffects_SMDM <- c(VarCorr(model.SMDM)$id[1,1], VarCorr(model.SMDM)$id[2,2],VarCorr(model.SMDM)$id[2,1])
-sigma2_SMDM <- sigma(model.SMDM)^2
+# Estimation with DAStau
+model.DAStau = rlmer(y ~ 1 + group*temps + (temps|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
+model.DAStau0 = rlmer(y ~ 1 + group + temps + (temps|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
+summ=summary(model.DAStau)
+fixedEffects_DAStau <- fixef(model.DAStau)
+randomEffects_DAStau <- c(VarCorr(model.DAStau)$id[1,1], VarCorr(model.DAStau)$id[2,2],VarCorr(model.DAStau)$id[2,1])
+sigma2_DAStau <- sigma(model.DAStau)^2
 
 
-inf = c(fixef(model.SMDM) - summ$coefficients[,2]*qnorm(.95+.05/2))
-sup = c(fixef(model.SMDM) + summ$coefficients[,2]*qnorm(.95+.05/2))
-TestWaldns_SMDM = inf < 0 & 0 < sup
-TestWaldns_SMDM = c(TestWaldns_SMDM,NA,NA,NA,NA)
+inf = c(fixef(model.DAStau) - summ$coefficients[,2]*qnorm(.95+.05/2))
+sup = c(fixef(model.DAStau) + summ$coefficients[,2]*qnorm(.95+.05/2))
+TestWaldns_DAStau = inf < 0 & 0 < sup
+TestWaldns_DAStau = c(TestWaldns_SMDM,NA,NA,NA,NA)
 
-wildSMDM <- TestFixef(model = model.SMDM, model0 = model.SMDM0, Data = Dataset, id = participant, Time = time, method = "wild", B = 99, level = .95)
-#Testwildns_SMDM = wildSMDM[,1] < 0 & 0 < wildSMDM[,2]
+wildDAStau<- TestFixef(model = model.DAStau, model0 = model.DAStau0, Data = Dataset, id = participant, Time = time, method = "wild", B = 99, level = .95)
+#Testwildns_DAStau = wildDAStau[,1] < 0 & 0 < wildDAStau[,2]
 
-paramSMDM <- TestFixef(model = model.SMDM, model0 = model.SMDM0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 99, level = .95)
-#Testparamns_SMDM = paramSMDM[,1] < 0 & 0 < paramSMDM[,2]
+paramDAStau <- TestFixef(model = model.DAStau, model0 = model.DAStau0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 99, level = .95)
+#Testparamns_DAStau = paramDAStau[,1] < 0 & 0 < paramDAStau[,2]
 
 
 # 4c) Estimation with heavyLme() (see corresponding helpfile for more details)
