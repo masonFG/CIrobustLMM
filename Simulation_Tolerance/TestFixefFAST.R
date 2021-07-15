@@ -108,7 +108,7 @@ TestFixef <- function(model, model0, Data, id, Time, method, B, level){
   #Object of class rlmerMod (rlmer)
   if(class(model)[1]=="rlmerMod"){
     if(method == "parametric"){
-      source("TestFixef_paramSMDM.R")
+      source("TestFixef_paramDAStau.R")
       result = param_lmer(model = model, model0 = model0, B = B, level = level)
       result = list(Estimates=result$`estimation`,p_value=result[[2]])
       return(result)
