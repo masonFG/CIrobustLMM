@@ -35,7 +35,7 @@ clusjack <- function (model, data, clusterid) {
   cluster <- as.character(clusterid)
   clusters <- unique(cluster)
   nc <- length(clusters)
-  nc=2
+ 
   Obsno <- split(1:n, cluster)
   for (i in 1:nc) {
     obs <- unlist(Obsno[-i])
