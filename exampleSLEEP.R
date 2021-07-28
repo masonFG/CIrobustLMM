@@ -1,3 +1,8 @@
+# preliminary setup
+
+# 1) Set working directory (select the folder "CIfunctions")
+setwd("..../CIfunctions")
+
 # 2) Load the packages
 library(MASS) # version 7.3-51.1
 library(robustvarComp) # version 0.1-2
