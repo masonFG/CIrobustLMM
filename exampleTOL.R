@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------
 # Author: Fabio Mason
-# Date: August, 2020
+# Date: August, 2021
 # R version: 3.6.0
 #  R code for analyses presented in
 
@@ -24,14 +24,14 @@ library(lme4) # version 1.1-20
 library(lmerTest) # version 3.1-2
 library(doParallel) # version 1.0.14
 library(stringr)  # version 1.4.0
-library(inferLMM)
+source("confintLMMFast.R") # function to produce confidence intervals
+source("TestFixefFAST.R") # function get p_value based on bootstrap
 
 bdd <- read.csv("H:/These/CIrobustLMM_suite/ToleranceGIT/Dataset.txt")
 
 
 # Identify dataset, time and participant variables
 Dataset = bdd
-time = bdd$time
 participant = bdd$id
 
 ###############
@@ -39,59 +39,61 @@ participant = bdd$id
 
 # 4a) Estimation with varComprob() (see corresponding helpfile for more details)
 
+# Define the within-subject variable (by example the time variable)
+WITHIN = bdd$time
+
 # Build the argument "groups" of the varComprob() function
 n = length(unique(participant)) # the number of participants
-J = length(unique(time)) # the number of repeated observations per participant
+J = length(unique(WITHIN)) # the number of repeated observations per participant
 groups = cbind(rep(1:J, each=n),rep((1:n), J)) # a numeric matrix with two columns used to group the observations according to participant.
 
 # Build the argument "varcov" of the varComprob() function
 z1 = rep(1, J) #Value for intercept (=1) for the J observations by clusters
-z2 = unique(time) # Value for the time variable
+z2 = unique(WITHIN) # Value for the time variable
 
 K = list() # the "varcov" object
 K[[1]] = tcrossprod(z1,z1) # Matrix for intercept
 K[[2]] = tcrossprod(z2,z2) # Matrix for time variable
 K[[3]] = tcrossprod(z1,z2) + tcrossprod(z2,z1) # Matrix of interaction Intercept by time variable
-names(K) = c("sigma2_Intercept", "sigma2_Time", "Covariance")
+names(K) = c("sigma2_u0", "sigma2_u1", "Covariance")
 
 # Define the formula of the two nested models
 model.formula = y ~ 1 + group*time
-model.formula0 = y ~ 1 + group+time
 
 # Estimation with S-estimator
-model.S  = varComprob(model.formula, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0,0,-Inf), method = "S", psi = "rocke"))
-model.S0 = varComprob(model.formula0, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0,0,-Inf), method = "S", psi = "rocke"))
+model.S  = varComprob(model.formula, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0,0,-Inf), method = "S", psi = "rocke")) 
 
+wildS <- BCabootvarCompRob(model = model.S, data = Dataset, clusterid = participant, methodCI = "wild", B = 100, confint.level = .95, BCa = T)
+wildS$Percentile
+wildS[[1]]$BCa.interval[[1]]
 
-wildS <- TestFixef(model = model.S, model0 = model.S0, Data = Dataset, id = participant, Time = time, method = "wild", B = 999, level = .95)
-wildS$p_value
-
-paramS <- TestFixef(model = model.S, model0 = model.S0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 3, level = .95)
-paramS$p_value
+paramS <- BCabootvarCompRob(model = model.S, data = Dataset, clusterid = participant, methodCI = "parametric", B = 100, confint.level = .95, BCa = T)
+paramS$Percentile
+paramS[[1]]$BCa.interval[[1]]
 
 # Estimation with composite-TAU estimator
-model.cTAU  = varComprob(model.formula, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf)))
-model.cTAU0 = varComprob(model.formula0, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf)))
+model.cTAU  = varComprob(model.formula, groups = groups, data = Dataset, varcov = K, control = varComprob.control(lower = c(0, 0, -Inf))) 
 
+wildcTAU <- BCabootvarCompRob(model = model.cTAU, data = Dataset, clusterid = participant, methodCI = "wild", B = 100, confint.level = .95, BCa = T)
+wildcTAU$Percentile
+wildcTAU[[1]]$BCa.interval[[1]]
 
-
-wildcTAU <- TestFixef(model = model.cTAU, model0 = model.cTAU0, Data = Dataset, id = participant, Time = time, method = "wild", B = 9, level = .95)
-wildcTAU$p_value
-
-paramcTAU <- TestFixef(model = model.cTAU, model0 = model.cTAU0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 9, level = .95)
-paramcTAU$p_value
+paramcTAU <- BCabootvarCompRob(model = model.cTAU, data = Dataset, clusterid = participant, methodCI = "parametric", B = 100, confint.level = .95, BCa = T)
+paramcTAU$Percentile
+paramcTAU[[1]]$BCa.interval[[1]]
 
 # 4b) Estimation with rlmer() (see corresponding helpfile for more details)
 
 # Estimation with DAStau
-model.DAStau = rlmer(y ~ 1 + group*time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
-model.DAStau0 = rlmer(y ~ 1 + group + time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
+model.DAStau = rlmer(y ~ 1 + group*time + (time|id), data = Dataset, rho.sigma.e = psi2propII(smoothPsi, k = 2.28), rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))                   
 
-wildDAStau <- TestFixef(model = model.DAStau, model0 = model.DAStau0, Data = Dataset, id = participant, Time = time, method = "wild", B = 9, level = .95)
-wildDAStau$p_value
+wildDAStau <- BCaboot(model = model.DAStau, data = Dataset, clusterid = participant, methodCI = "wild", B = 10, confint.level = .95, BCa = T)
+wildDAStau$Percentile
+wildDAStau[[1]]$BCa.interval[[1]]
 
-paramDAStau <- TestFixef(model = model.DAStau, model0 = model.DAStau0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 9, level = .95)
-paramDAStau$p_value
+paramDAStau <- BCaboot(model = model.DAStau, data = Dataset, clusterid = participant, methodCI = "parametric", B = 10, confint.level = .95, BCa = T)
+paramDAStau$Percentile
+paramDAStau[[1]]$BCa.interval[[1]]
 
 
 
@@ -99,13 +101,14 @@ paramDAStau$p_value
 
 # Estimation with ML
 model.ML = lmer(y ~ 1 + group*time + (time|id), data = Dataset, REML = F)
-model.ML0 = lmer(y ~ 1 + group + time + (time|id), data = Dataset, REML = F)
 
 
 
-wildML <- TestFixef(model = model.ML, model0 = model.ML0, Data = Dataset, id = participant, Time = time, method = "wild", B = 9, level = .95)
-wildML$p_value
+wildML <- BCaboot(model = model.ML, data = Dataset, clusterid = participant, methodCI = "wild", B = 10, confint.level = .95, BCa = T)
+wildML$Percentile
+wildML[[1]]$BCa.interval[[1]]
 
-paramML <- TestFixef(model = model.ML, model0 = model.ML0, Data = Dataset, id = participant, Time = time, method = "parametric", B = 9, level = .95)
-paramML$p_value
+paramML <- BCaboot(model = model.ML, data = Dataset, clusterid = participant, methodCI = "parametric", B = 10, confint.level = .95, BCa = T)
+paramML$Percentile
+paramML[[1]]$BCa.interval[[1]]
 
