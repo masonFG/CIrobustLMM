@@ -1,15 +1,15 @@
 CIrobustLMM
 
-Contains a set of R functions and scripts to compute percentile confidence intervals based on bootstrap schemes or with Wald-z, for linear mixed models estimated with both classical and robust methods. The scripts allow for balanced longitudinal data designs. Two bootstrap schemes are implemented: the wild bootstrap and the parametric bootstrap. Both are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp) and rlmerMod (from package robustlmm). A fully worked out example of longitudinal linear mixed model on the sleepstudy data is provided.
+Contains a set of R functions and scripts to compute percentile confidence intervals based on bootstrap schemes, for linear mixed models estimated with both classical and robust methods. The scripts allow for balanced longitudinal data designs (and unbalanced usign rlmer (e.g. Koller, 2016) associated to the wild bootstrap). Two bootstrap schemes are implemented: the wild bootstrap and the parametric bootstrap. Both are adapted for objects of class merMod (from package lme4), varComprob (or varComprob.fit or varComprob.S from package robustvarComp) and rlmerMod (from package robustlmm). A fully worked out example of longitudinal linear mixed model on the sleepstudy data is provided.
 
 Contents
 
 The main function is confint.lmm(). 
 
-The file "CI_LMM_example.R" contains an example of its application on the sleepstudy data. It includes estimation with lmer() for methods ML and REML (e.g. Bates, 2014), rlmer() with options "DAStau" and "DASvar" (e.g. Koller, 2016) and varComprob() for methods S and composite-tau (see Agostinelli & Yohai, 2016). Users can adapt this document to their own dataset.
+The file "exampleSLEEP.R" contains an example of its application on the sleepstudy data. It includes estimation with lmer() for methods ML and REML (e.g. Bates, 2014), rlmer() with options "DAStau" and "DASvar" and varComprob() for methods S and composite-tau (see Agostinelli & Yohai, 2016). Users can adapt this document to their own dataset.
 The folder CIfunctions contains the auxiliary functions files, which must be downloaded and sourced before using the function confint.lmm().  More specifically, the file "confintLMM.R" contains the function confint.lmm(), which calls others functions contained in the folder (the files called by the prefix "CIfunctions_") depending on which estimation method is selected and which type of confidence interval is chosen.
 
-The folder "sleepstudySimulationGithub" contains all documents to replicate the simulation in Parametric and Semi-Parametric Bootstrap Based Confidence Intervals for Robust Linear Mixed Models (in submission).
+The folder "sleepstudySimulationGithub" contains all documents to replicate the simulation in Parametric and Semi-Parametric Bootstrap Based Confidence Intervals for Robust Linear Mixed Models (in revision).
 
 
   
