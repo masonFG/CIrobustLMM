@@ -5,14 +5,13 @@ library(robustlmm) # version 2.3
 library(heavy) # version 0.38.19
 library(lme4) # version 1.1-20
 library(doParallel) # version 1.0.14
-library(inferLMM)
+library(Rcpp)
 
 # 3) Import balanced dataset
 sleepstudy
 
-# Identify dataset, time and participant variables
+# Identify dataset and participant variables
 Dataset = sleepstudy
-time = sleepstudy$Days
 participant = sleepstudy$Subject
 
 ###############
@@ -20,20 +19,23 @@ participant = sleepstudy$Subject
 
 # 4a) Estimation with varComprob() (see corresponding helpfile for more details)
 
+# Define the within-subject variable (by example the time variable)
+WITHIN = sleepstudy$Days
+
 # Build the argument "groups" of the varComprob() function
 n = length(unique(participant)) # the number of participants
-J = length(unique(time)) # the number of repeated observations per participant
+J = length(unique(WITHIN)) # the number of repeated observations per participant
 groups = cbind(rep(1:J, each=n),rep((1:n), J)) # a numeric matrix with two columns used to group the observations according to participant.
 
 # Build the argument "varcov" of the varComprob() function
 z1 = rep(1, J) #Value for intercept (=1) for the J observations by clusters
-z2 = unique(time) # Value for the time variable
+z2 = unique(WITHIN) # Value for the time variable
 
 K = list() # the "varcov" object
 K[[1]] = tcrossprod(z1,z1) # Matrix for intercept
 K[[2]] = tcrossprod(z2,z2) # Matrix for time variable
 K[[3]] = tcrossprod(z1,z2) + tcrossprod(z2,z1) # Matrix of interaction Intercept by time variable
-names(K) = c("sigma2_Intercept", "sigma2_Time", "Covariance")
+names(K) = c("sigma2_u0", "sigma2_u1", "Covariance")
 
 # Define the formula of the model
 model.formula = Reaction ~ 1 + Days
@@ -60,8 +62,15 @@ model.ML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy, REML = 
 # Estimation with REML
 model.REML = lmer(Reaction ~ 1 + Days + (Days|Subject), data = sleepstudy)
 
-###############
-# Confidence interval estimations
-
 # 5) Confidence Intervals
-confintLMM(model = model.ML, Data = Dataset, id = participant, Time = time, method = "parametric", B = 20, level = .95)
+model = model.S; data = Dataset; clusterid = participant; methodCI = "wild"; B = 10; confint.level = .95; BCa = T
+source("confintLMMfast.R")
+source("BCaML.R")
+CI <- BCaboot(model = model.ML, data = Dataset, clusterid = participant, methodCI = "wild", B = 10, confint.level = .95, BCa = T)
+CI$Percentile
+CI[[1]]$BCa.interval[[1]]
+
+source("BCaVarCompRob.R")
+CIv <- BCabootvarCompRob(model = model.cTAU, data = Dataset, clusterid = participant, methodCI = "wild", B = 100, confint.level = .95, BCa = T)
+CIv$Percentile
+CIv[[1]]$BCa.interval[[1]]
