@@ -33,7 +33,7 @@ Koller, M. (2016). robustlmm: An r package for robust estimation of linear mixed
 models. Journal of Statistical Software, 75 (6). doi: 10.18637/jss.v075.i06
 
 Mason, F., Cantoni, E., & Ghisletta, P. (2021). Parametric and Semi-Parametric Bootstrap-Based Confidence Intervals for Robust Linear Mixed Models. 
-Methodology, 17(4), 271-295.
+Methodology, 17(4), 271-295. doi: https://doi.org/10.5964/meth.6607
 
 Modugno, L., & Giannerini, S. (2013). The wild bootstrap for multilevel models.
 Communications in Statistics - Theory and Methods, 44 (22), 4812–4825. doi:
