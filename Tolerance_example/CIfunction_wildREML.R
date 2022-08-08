@@ -1,10 +1,3 @@
-# ---------------------------------------------------------------------
-# Author: Fabio Mason
-# Date: September, 2019
-# R version: 3.5.1
-# Comment: R code for analyses presented in titres-du-papier - this script contains the function of the wild bootstrap on REML
-# ---------------------------------------------------------------------
-
 wild_lmer <- function(model, B, level){
   
   if (length(model@theta) > 1){                              
@@ -104,24 +97,13 @@ wild_lmer <- function(model, B, level){
                    
                    summb 					= summary(model.bootr)
                    bet_boot 				= fixef(model.bootr)
-                   sigma2_boot 		= sigma(model.bootr)^2
-                   sigma2_u0_boot 	= as.matrix(summb$varcor[[1]])[1]
+                   sigma_boot 		= as.data.frame(VarCorr(model.bootr))[,4]
                    
                    
-                   if(length(model@theta)==1){
-                     result 		        = c(bet_boot, sigma2_boot, sigma2_u0_boot) 
-                   }
                    
-                   if(length(model@theta)==2){
-                     sigma2_u1_boot 	= as.matrix(summb$varcor[[2]])[1]
-                     result 				    = c(bet_boot, sigma2_boot, sigma2_u0_boot, sigma2_u1_boot)
-                   }
                    
-                   if(length(model@theta)==3){
-                     sigma2_u1_boot 		= as.matrix(summb$varcor[[1]])[4]
-                     covariance_boot 	= as.matrix(summb$varcor[[1]])[2]
-                     result 				    = c(bet_boot, sigma2_boot, sigma2_u0_boot, sigma2_u1_boot, covariance_boot)
-                   }
+                     result 		        = c(bet_boot, sigma_boot) 
+                   
                    resultr<-rbind(resultr,result)
                  }
   
@@ -140,17 +122,9 @@ wild_lmer <- function(model, B, level){
   CI 						    = t(matrix(estim,2,J))
   
 
-  if(length(model@theta)==1){
-    row.names(CI) <- c(names(fixef(model)), "sigma2", "sigma2_u0")
-  }
-  
-  if(length(model@theta)==2){
-    row.names(CI) <- c(names(fixef(model)), "sigma2", "sigma2_u0", "sigma2_u1")
-  }
-  
-  if(length(model@theta)==3){
-    row.names(CI) <- c(names(fixef(model)), "sigma2", "sigma2_u0", "sigma2_u1", "covariance")
-  }
+
+    row.names(CI) <- c(names(fixef(model)),as.data.frame(VarCorr(model.bootr))[,1])
+ 
   
   colnames(CI) 		  = c("lower bound", "upper bound")
   return(list(estimation=results$effects,CI))
