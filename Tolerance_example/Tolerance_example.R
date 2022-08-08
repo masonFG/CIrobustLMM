@@ -26,6 +26,8 @@ library(doParallel) # version 1.0.14
 library(stringr)  # version 1.4.0
 source("confintLMMFast.R") # function to produce confidence intervals
 source("TestFixefFAST.R") # function get p_value based on bootstrap
+source("BCaML.R") # function get p_value based on bootstrap
+source("BCaVarCompRob.R") # function get p_value based on bootstrap
 
 bdd <- read.csv("H:/These/CIrobustLMM_suite/ToleranceGIT/Dataset.txt")
 
