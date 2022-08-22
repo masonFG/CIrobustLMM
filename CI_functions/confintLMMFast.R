@@ -5,6 +5,19 @@
 # Comment: R code for analyses presented in titres-du-papier
 # ---------------------------------------------------------------------
 
+#' Title
+#'
+#' @param model 
+#' @param Data 
+#' @param id 
+#' @param method 
+#' @param B 
+#' @param level 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 confint.LMM <- function(model, Data, id, method, B, level){
   
   
@@ -105,8 +118,8 @@ confint.LMM <- function(model, Data, id, method, B, level){
       return(result)
     }
     if(method == "wild"){
-      source("CIfunction_wildREML.R")
-      result = wild_lmer(model = model, B = B, level = level)
+      source("CIfunction_wildDAStau.R")
+      result = wild_rlmer(model = model, B = B, level = level)
       return(result)
     }
     if(method == "Wald"){

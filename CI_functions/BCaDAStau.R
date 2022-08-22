@@ -6,12 +6,12 @@ clusjack <- function (model, data, clusterid) {
   
   randoms 		= as.data.frame(VarCorr(model))[,4]
 
-  res.or.coef <- c(fixef(model),randoms)
+  res.or.coef <- c(fixef(model))
   
-  names(res.or.coef) <- c(names(fixef(model)), as.data.frame(VarCorr(model))[,1])
+  names(res.or.coef) <- c(names(fixef(model)))
   
   
-  p <- length(betas) + length(randoms) + 1
+  p <- length(betas) 
   coefs <- matrix(NA, nrow = length(unique(clusterid)), ncol = p)
   cluster <- as.character(clusterid)
   clusters <- unique(cluster)
@@ -23,7 +23,7 @@ clusjack <- function (model, data, clusterid) {
     modeljack <- update(model, data = data[obs,])
     summjack <- summary(modeljack)
 
-    jackcoef <- c(fixef(modeljack),as.data.frame(VarCorr(modeljack))[,4])
+    jackcoef <- c(fixef(modeljack))
 
     coefs[i,] <- as.vector(jackcoef)
   }
@@ -67,19 +67,18 @@ BCaboot <- function(model, data, clusterid, methodCI, B=B, confint.level=confint
   confint.Zboundaries = qnorm(confint.pboundaries)
   n <- nrow(data) 
   betas <- fixef(model)
-  randoms 		= as.data.frame(VarCorr(model))[,4]
   
   
     
   
-  res.or.coef <- c(fixef(model),randoms)
+  res.or.coef <- c(fixef(model))
   
   
-    names(res.or.coef) <- c(names(fixef(model)), as.data.frame(VarCorr(model))[,1])
+    names(res.or.coef) <- names(fixef(model))
   
   
   
-  p <- length(betas) + length(randoms) + 1
+  p <- length(betas) 
   
   resampling <- confint.LMM(model = model, Data = data, id = clusterid, method = methodCI, B = B, level = confint.level)
   
