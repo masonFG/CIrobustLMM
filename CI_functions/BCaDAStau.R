@@ -59,7 +59,7 @@ confint_BCa <- function(B, model, data, clusterid, coefs, res.or.coef, p, confin
 
 
 
-BCaboot <- function(model, data, clusterid, methodCI, B=B, confint.level=confint.level, BCa = BCa){
+BCaboot_rlmer <- function(model, data, clusterid, methodCI, B=B, confint.level=confint.level, BCa = BCa){
   
   res.or <- model
   summ <- summary(model)
