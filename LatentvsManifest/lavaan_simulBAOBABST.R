@@ -1,16 +1,16 @@
-# library(lavaan)
-# library(MASS)
-# library(semTools)
-# library(semPlot)
-# library(dplyr)
-# library(tidyverse)
-# library(ggplot2)
-# library(pipeR)
-# library(psych)
-# library(lmerTest)
-#rounded values
+ library(lavaan)
+ library(MASS)
+ library(semTools)
+ library(semPlot)
+ library(dplyr)
+ library(tidyverse)
+ library(ggplot2)
+ library(pipeR)
+ library(psych)
+ library(lmerTest)
 
-#N=100; items=12; mD0=0; mD1=0.3; varD=0.3;covar=0.25*sqrt(varD)*1;B=25;
+#Example with 25 samples of 100 participants, 12 items with mean and variance change respectively of 0.3 and 0.01
+N=100; items=12; mD0=0; mD1=0.3; varD=0.01;covar=0.25*sqrt(varD)*1;B=25;
 
 SimulmeanScore= function(N,B,items,mD0,mD1,varD,covar){
 n=N/2 #sample size
@@ -31,13 +31,13 @@ loads_low <- sqrt(comm_low)
 loads_high <- sqrt(comm_high)
 loads_wide <- sqrt(comm_wide)
 
-change_mean = mD1 #moyenne du changement latent
-change_var = varD #variance du changement latent
+change_mean = mD1 #latent change mean
+change_var = varD #latent change var
 
-verbal_mean = 0 #moyenne facteur latent au temps 0
-verbal_var = 1 #variance facteur latent au temps 0
-cov_changeVerbal = covar #covariance entre changement et score latent au temps 0
-MatrixChange <- rbind(c(change_var,cov_changeVerbal),c(cov_changeVerbal,verbal_var)) #matrice de variance covariance des facteurs latents
+verbal_mean = 0 #factor mean at time 0
+verbal_var = 1 #factor var at time 0
+cov_changeVerbal = covar #covariance between change en factor scores at time 0
+MatrixChange <- rbind(c(change_var,cov_changeVerbal),c(cov_changeVerbal,verbal_var)) #as matrix
 colnames(MatrixChange) <- c("change","factor")
 rownames(MatrixChange) <- c("change","factor")
 
@@ -49,12 +49,12 @@ var_resid_wide = 1-loads_wide^2 #residuals variance for model wide
 
 
 
-#covariance residuelle
+#residual covariance 
 rescov_low = rep(var_resid_low,items)
 rescov_high = rep(var_resid_high,items)
 rescov_wide = rep(var_resid_wide,items)
 
-#matrice de variance-covariance des residus
+#residuals matrix
 sigma_res_low <-diag(c(rescov_low,rescov_low),nrow=2*items,ncol=2*items)
 sigma_res_high <-diag(c(rescov_high,rescov_high),nrow=2*items,ncol=2*items)
 sigma_res_wide <-diag(c(rescov_wide,rescov_wide),nrow=2*items,ncol=2*items)
@@ -69,10 +69,10 @@ rownames(sigma_res_high)<-c(manifeste_t0,manifeste_t1)
 colnames(sigma_res_wide)<-c(manifeste_t0,manifeste_t1)
 rownames(sigma_res_wide)<-c(manifeste_t0,manifeste_t1)
 
-#intercept variables manifestes
+#intercept of manifest variables
 intercepts_xi <- rep(0,2*items)
 
-#modele pour tester
+#model to be tested
 loads_test = paste("a",2:(items),sep = "")
 loads_testL = c("0.447213595499958",loads_test)
 loads_testH = c("0.774596669241483",loads_test)
@@ -128,16 +128,16 @@ Delta =~ 1*factor_t1
         Delta ~~ Delta
         factor_t0 ~~ Delta
 '
-#covariance erreur
+#covariance error script
 cov_err_test = paste0(manifeste_t0,"~~",manifeste_t1)
 cov_err_test_char = paste0(cov_err_test,collapse = "\n")
-#variance residuelle
+#residual variance script
 var_test_t0 = paste0(manifeste_t0,"~~",manifeste_t0)
 var_test_t0_char = paste0(var_test_t0,collapse = "\n")
 var_test_t1 = paste0(manifeste_t1,"~~",manifeste_t1)
 var_test_t1_char = paste0(var_test_t1,collapse = "\n")
 
-#SCRIPT TO DEFINE INTERCEPT TO 0
+#SCRIPT TO DEFINE INTERCEPT = 0
 intercept_t0 = paste0(manifeste_t0,"~0*1")
 intercept_t0_char = paste0(intercept_t0,collapse = "\n")
 intercept_t1 = paste0(manifeste_t1,"~0*1")
@@ -182,11 +182,11 @@ script_testHMOY <- paste0(reg_testH,
 result=list()
 for (i in 1:B){
   set.seed(i)
-  scores_latents <- as.data.frame(mvrnorm(n,mu=c(change_mean,verbal_mean),MatrixChange)) #n scores du changement latent et du facteur latent au temps 0
-  scores_latents_controle <- as.data.frame(mvrnorm(n,mu=c(0,verbal_mean),MatrixChange)) #n scores du changement latent et du facteur latent au temps 0
-  resids_low <- as.data.frame(mvrnorm(n*2,mu=rep(0,2*items),Sigma=sigma_res_low)) # genere les residus pour les 2 temps de mesures pour les 4 items - model parallel
-  resids_high <- as.data.frame(mvrnorm(n*2,mu=rep(0,2*items),Sigma=sigma_res_high)) # genere les residus pour les 2 temps de mesures pour les 4 items - model parallel
-  resids_wide <- as.data.frame(mvrnorm(n*2,mu=rep(0,2*items),Sigma=sigma_res_wide)) # genere les residus pour les 2 temps de mesures pour les 4 items - model parallel
+  scores_latents <- as.data.frame(mvrnorm(n,mu=c(change_mean,verbal_mean),MatrixChange)) #n latent change and factor scores at time 0, treatment
+  scores_latents_controle <- as.data.frame(mvrnorm(n,mu=c(0,verbal_mean),MatrixChange)) #n latent change and factor scores at time 0, control
+  resids_low <- as.data.frame(mvrnorm(n*2,mu=rep(0,2*items),Sigma=sigma_res_low)) # residuals with low reliability
+  resids_high <- as.data.frame(mvrnorm(n*2,mu=rep(0,2*items),Sigma=sigma_res_high)) #  residuals with high reliability
+  resids_wide <- as.data.frame(mvrnorm(n*2,mu=rep(0,2*items),Sigma=sigma_res_wide)) #  residuals with wide reliability
   
   
   #data generating
@@ -319,14 +319,14 @@ for (i in 1:B){
   # plot(dataframe_wide$diffScore,dataframe_wide$trueChange)
   # abline(0,1)
   
-  ###Estimation des modeles
+  ###Estimates and tests
   
   #### TESTS
-  # Estimation sur donnees wide
+  # WIDE
   if(items==3){estimates <- c(11,13,41,43,61); nb_est = 61  }
   if(items==6){estimates <- c(17,19,68,70,103); nb_est = 103    }
   if(items==12){estimates <- c(29,31,122,124,187); nb_est = 187    }
-  # Estimation sur donnees wide
+  # lavaan estimates
   fit_wide <- try(sem(script_testL,
                       data = dataframe_wide,
                       group = "group",
@@ -532,7 +532,7 @@ for (i in 1:B){
   
   results_wide$Condition <- "wide"
   
-  # Estimation sur donnees high
+  # HIGH
   fit_high <- try(sem(script_testH,
                       data = dataframe_high,
                       group = "group",
@@ -745,7 +745,7 @@ for (i in 1:B){
   results_high$Condition <- "high"
   
   
-  # Estimation sur donnees low
+  # LOW
   fit_low <- try(sem(script_testL,
                      data = dataframe_low,
                      group = "group",
@@ -958,7 +958,7 @@ for (i in 1:B){
   
   results_low$Condition <- "low"
   
-  #Satterthwaite
+  #Satterthwaite with lavaan
   fit_wideSATT <- sem(script_testL,
                       data = dataframe_wide,
                       estimator="MLMVS",
@@ -991,7 +991,7 @@ for (i in 1:B){
   lavaan_lowSATT$Test <- "Satterthwaite"
   lavaan_lowSATT$Condition <- "low"
   resultSATT_i <- rbind(lavaan_wideSATT,lavaan_highSATT,lavaan_lowSATT)
-  #resultats
+  #results
   
   result_i<-rbind(results_wide,results_high,results_low)
   result_i <- bind_rows(result_i,resultSATT_i)
@@ -1010,4 +1010,4 @@ return(result_matrix)
 
 }
 
-#results=SimulmeanScore(N=N,B=B,items=items,mD0=mD0,mD1=mD1,varD=varD,covar=covar)
+results=SimulmeanScore(N=N,B=B,items=items,mD0=mD0,mD1=mD1,varD=varD,covar=covar)
