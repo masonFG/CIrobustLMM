@@ -203,14 +203,17 @@ for (i in 1:B){
   dataframe_wide$group <- rep(c(0,1),each=n)
   
   for(j in 1:items){
-    manifeste_t0_low_control = scores_latents_controle$factor*loads_low[j] + resids_low[1:n,j]
+ #manifest at time 0 is obtained multiplying the factor score and loadings and adding the resids. Control are the first n rows
+   manifeste_t0_low_control = scores_latents_controle$factor*loads_low[j] + resids_low[1:n,j]
     manifeste_t0_high_control = scores_latents_controle$factor*loads_high[j] + resids_high[1:n,j]
     manifeste_t0_wide_control = scores_latents_controle$factor*loads_wide[j] + resids_wide[1:n,j]
-    
+
+    #manifest at time 1 is obtained by adding the factor and change scores, multiplied by loadings and adding the resids. Control are the first n rows
     manifeste_t1_low_control =  (scores_latents_controle$factor + scores_latents_controle$change)*loads_low[j] + resids_low[1:n,(j+items)]
     manifeste_t1_high_control =  (scores_latents_controle$factor + scores_latents_controle$change)*loads_high[j] + resids_high[1:n,(j+items)]
     manifeste_t1_wide_control =  (scores_latents_controle$factor + scores_latents_controle$change)*loads_wide[j] + resids_wide[1:n,(j+items)]
-    
+
+   #same for treatment
     manifeste_t0_low_treatment = scores_latents$factor*loads_low[j] + resids_low[(n+1):N,j]
     manifeste_t0_high_treatment = scores_latents$factor*loads_high[j] + resids_high[(n+1):N,j]
     manifeste_t0_wide_treatment = scores_latents$factor*loads_wide[j] + resids_wide[(n+1):N,j]
@@ -244,7 +247,7 @@ for (i in 1:B){
   relia_wide_treat1<-omega(dataframe_wide[dataframe_wide$group==1,c(1:items)],plot = F)
   relia_wide_treat2<-omega(dataframe_wide[dataframe_wide$group==1,c((items+1):(2*items))],plot = F)
   
-  
+  #Cronbach alpha
   alpha_low_control1<-relia_low_control1$alpha
   alpha_low_control2<-relia_low_control2$alpha
   alpha_low_treat1<-relia_low_treat1$alpha
@@ -259,7 +262,7 @@ for (i in 1:B){
   alpha_wide_treat2<-relia_wide_treat2$alpha
   
   
-  
+  #hierarchical omega
   omega_h_low_control1<-relia_low_control1$omega_h
   omega_h_low_control2<-relia_low_control2$omega_h
   omega_h_low_treat1<-relia_low_treat1$omega_h
@@ -273,7 +276,7 @@ for (i in 1:B){
   omega_h_wide_treat1<-relia_wide_treat1$omega_h
   omega_h_wide_treat2<-relia_wide_treat2$omega_h
   
-  
+  #total omega
   omega.tot_low_control1<-relia_low_control1$omega.tot
   omega.tot_low_control2<-relia_low_control2$omega.tot
   omega.tot_low_treat1<-relia_low_treat1$omega.tot
@@ -436,7 +439,7 @@ for (i in 1:B){
   
   
   lavaan_wide$Test <- "factorScore"
-  
+  #lmer estimates
   long_wide<-gather(dataframe_wide[,(2*items+1):(2*items+4)],Time, Score,meanScoreT0:meanScoreT1, factor_key = T )
   long_wide$group <- factor(long_wide$group)
   lmer_wide<-lmer(Score~Time*group +(1|id),long_wide,REML=F)
@@ -465,7 +468,7 @@ for (i in 1:B){
   result_lmer_wide$srmr <- NA
   result_lmer_wide$Test <- "meanScore"
   result_lmer_wide$chisq_diff <- NA
-  
+  #t test estimates
   ttestdata_wide<-data.frame(diffCont=dataframe_wide[dataframe_wide$group==0,]$diffScore,diffTreat=dataframe_wide[dataframe_wide$group==1,]$diffScore)
   ttest_wide_result<-t.test(ttestdata_wide$diffTreat,ttestdata_wide$diffCont,var.equal=T)
   ttest_wide_Cont<-t.test(ttestdata_wide$diffCont,var.equal=T)
