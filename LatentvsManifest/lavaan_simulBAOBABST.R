@@ -470,9 +470,9 @@ for (i in 1:B){
   result_lmer_wide$chisq_diff <- NA
   #t test estimates
   ttestdata_wide<-data.frame(diffCont=dataframe_wide[dataframe_wide$group==0,]$diffScore,diffTreat=dataframe_wide[dataframe_wide$group==1,]$diffScore)
-  ttest_wide_result<-t.test(ttestdata_wide$diffTreat,ttestdata_wide$diffCont,var.equal=T)
-  ttest_wide_Cont<-t.test(ttestdata_wide$diffCont,var.equal=T)
-  ttest_wide_Treat<-t.test(ttestdata_wide$diffTreat,var.equal=T)
+  ttest_wide_result<-t.test(ttestdata_wide$diffTreat,ttestdata_wide$diffCont,var.equal=F)
+  ttest_wide_Cont<-t.test(ttestdata_wide$diffCont,var.equal=F)
+  ttest_wide_Treat<-t.test(ttestdata_wide$diffTreat,var.equal=F)
   
   result_ttest_wide <- data.frame(matrix(NA,4,dim(lavaan_wide)[2]))
   colnames(result_ttest_wide) <- colnames(lavaan_wide)
@@ -680,9 +680,9 @@ for (i in 1:B){
   
   
   ttestdata_high<-data.frame(diffCont=dataframe_high[dataframe_high$group==0,]$diffScore,diffTreat=dataframe_high[dataframe_high$group==1,]$diffScore)
-  ttest_high_result<-t.test(ttestdata_high$diffTreat,ttestdata_high$diffCont,var.equal=T)
-  ttest_high_Cont<-t.test(ttestdata_high$diffCont,var.equal=T)
-  ttest_high_Treat<-t.test(ttestdata_high$diffTreat,var.equal=T)
+  ttest_high_result<-t.test(ttestdata_high$diffTreat,ttestdata_high$diffCont,var.equal=F)
+  ttest_high_Cont<-t.test(ttestdata_high$diffCont,var.equal=F)
+  ttest_high_Treat<-t.test(ttestdata_high$diffTreat,var.equal=F)
   
   result_ttest_high <- data.frame(matrix(NA,4,dim(lavaan_high)[2]))
   colnames(result_ttest_high) <- colnames(lavaan_high)
@@ -894,9 +894,9 @@ for (i in 1:B){
   
   
   ttestdata_low<-data.frame(diffCont=dataframe_low[dataframe_low$group==0,]$diffScore,diffTreat=dataframe_low[dataframe_low$group==1,]$diffScore)
-  ttest_low_result<-t.test(ttestdata_low$diffTreat,ttestdata_low$diffCont,var.equal=T)
-  ttest_low_Cont<-t.test(ttestdata_low$diffCont,var.equal=T)
-  ttest_low_Treat<-t.test(ttestdata_low$diffTreat,var.equal=T)
+  ttest_low_result<-t.test(ttestdata_low$diffTreat,ttestdata_low$diffCont,var.equal=F)
+  ttest_low_Cont<-t.test(ttestdata_low$diffCont,var.equal=F)
+  ttest_low_Treat<-t.test(ttestdata_low$diffTreat,var.equal=F)
   
   result_ttest_low <- data.frame(matrix(NA,4,dim(lavaan_low)[2]))
   colnames(result_ttest_low) <- colnames(lavaan_low)
