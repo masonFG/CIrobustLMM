@@ -10,7 +10,7 @@ library(psych)
 library(lmerTest)
 
 #Example with 25 samples of 100 participants, 12 items with mean and variance change respectively of 0.3 and 0.01
-N=100; items=12; mD0=0; mD1=0.3; varD=0.01;covar=0.25*sqrt(varD)*1;B=3;
+N=100; items=12; mD0=0; mD1=0.3; varD=0.01;covar=0.25*sqrt(varD)*1;B=25;
 
 SimulmeanScore= function(N,B,items,mD0,mD1,varD,covar){
   n=N/2 #sample size
