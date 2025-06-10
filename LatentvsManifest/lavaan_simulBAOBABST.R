@@ -363,7 +363,7 @@ Delta =~ 1*factor_t1
       lavaan_wide$srmr <- NA
       lavaan_wide$chisq_diff <- NA
       
-      result_LRT_wide <- data.frame(matrix(NA,3,dim(lavaan_wide)[2]))
+      result_LRT_wide <- data.frame(matrix(NA,2,dim(lavaan_wide)[2]))
       colnames(result_LRT_wide) <- colnames(lavaan_wide)
       result_LRT_wide$TrueValue <-(mD1-mD0)
       result_LRT_wide$Test <-NA
@@ -570,7 +570,7 @@ Delta =~ 1*factor_t1
       lavaan_high$srmr <- NA
       lavaan_high$chisq_diff <- NA
       
-      result_LRT_high <- data.frame(matrix(NA,3,dim(lavaan_high)[2]))
+      result_LRT_high <- data.frame(matrix(NA,2,dim(lavaan_high)[2]))
       colnames(result_LRT_high) <- colnames(lavaan_high)
       result_LRT_high$TrueValue <-(mD1-mD0)
       result_LRT_high$Test <-NA
@@ -782,7 +782,7 @@ Delta =~ 1*factor_t1
       lavaan_low$srmr <- NA
       lavaan_low$chisq_diff <- NA
       
-      result_LRT_low <- data.frame(matrix(NA,3,dim(lavaan_low)[2]))
+      result_LRT_low <- data.frame(matrix(NA,2,dim(lavaan_low)[2]))
       colnames(result_LRT_low) <- colnames(lavaan_low)
       result_LRT_low$TrueValue <-(mD1-mD0)
       result_LRT_low$Test <-NA
@@ -811,7 +811,7 @@ Delta =~ 1*factor_t1
       lavaan_low$srmr <- NA
       lavaan_low$chisq_diff <- NA
       
-      result_LRT_low <- data.frame(matrix(NA,3,dim(lavaan_low)[2]))
+      result_LRT_low <- data.frame(matrix(NA,2,dim(lavaan_low)[2]))
       colnames(result_LRT_low) <- colnames(lavaan_low)
       result_LRT_low$TrueValue <-(mD1-mD0)
       result_LRT_low$Test <-NA
